@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="120dp"
-    android:layout_width="80dp"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:layout_margin="8dp"
-    android:contentDescription="@string/movie_image"
-    android:src="@drawable/ic_launcher_background"
-    android:scaleType="centerCrop"
-    />
+    >
+
+    <ImageView
+        android:id="@+id/movie_image"
+        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:contentDescription="@string/movie_image"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/ic_launcher_background"
+        />
+
+    <TextView
+        android:id="@+id/movie_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Titulo"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        />
+
+    <TextView
+        android:id="@+id/movie_release_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2000"
+        />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
