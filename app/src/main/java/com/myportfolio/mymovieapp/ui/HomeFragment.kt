@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.myportfolio.mymovieapp.R
+import com.myportfolio.mymovieapp.databinding.FragmentHomeBinding
 import com.myportfolio.mymovieapp.model.Media
 
 /**
@@ -15,14 +16,17 @@ import com.myportfolio.mymovieapp.model.Media
  */
 class HomeFragment : Fragment() {
 
+    private var binding: FragmentHomeBinding? = null
     private val sharedViewModel: AppViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val fragmentBinding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = fragmentBinding
+        return fragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,39 +34,44 @@ class HomeFragment : Fragment() {
         loadCategories(view)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     private fun loadCategories(view: View) {
         bindMovieListView(
-            view = view.findViewById(R.id.movie_list1),
+            view = binding!!.movieList1.root,
             title = getString(R.string.popular),
             mediaType = getString(R.string.movies),
             list = sharedViewModel.mediaListTests,
         )
         bindMovieListView(
-            view = view.findViewById(R.id.movie_list2),
+            view = binding!!.movieList2.root,
             title = getString(R.string.top_rated),
             mediaType = getString(R.string.movies),
             list = sharedViewModel.mediaListTests,
         )
         bindMovieListView(
-            view = view.findViewById(R.id.movie_list3),
+            view = binding!!.movieList3.root,
             title = getString(R.string.upcoming),
             mediaType = getString(R.string.movies),
             list = sharedViewModel.mediaListTests,
         )
         bindMovieListView(
-            view = view.findViewById(R.id.series_list1),
+            view = binding!!.seriesList1.root,
             title = getString(R.string.popular),
             mediaType = getString(R.string.series),
             list = sharedViewModel.mediaListTests,
         )
         bindMovieListView(
-            view = view.findViewById(R.id.series_list2),
+            view = binding!!.seriesList2.root,
             title = getString(R.string.top_rated),
             mediaType = getString(R.string.series),
             list = sharedViewModel.mediaListTests,
         )
         bindMovieListView(
-            view = view.findViewById(R.id.series_list3),
+            view = binding!!.seriesList3.root,
             title = getString(R.string.upcoming),
             mediaType = getString(R.string.series),
             list = sharedViewModel.mediaListTests,

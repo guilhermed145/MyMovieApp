@@ -10,12 +10,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.myportfolio.mymovieapp.R
+import com.myportfolio.mymovieapp.databinding.FragmentCategoryBinding
+import com.myportfolio.mymovieapp.databinding.FragmentHomeBinding
 
 /**
  * A simple [Fragment] subclass.
  */
 class CategoryFragment : Fragment() {
 
+    private var binding: FragmentCategoryBinding? = null
     private val sharedViewModel: AppViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -23,19 +26,26 @@ class CategoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_category, container, false)
+        val fragmentBinding = FragmentCategoryBinding.inflate(inflater, container, false)
+        binding = fragmentBinding
+        return fragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<TextView>(R.id.category_fragment_title)
-            .text = sharedViewModel.getCategoryFragmentTitle()
+        binding?.categoryFragmentTitle?.text = sharedViewModel.getCategoryFragmentTitle()
         val adapter = MovieListAdapter(sharedViewModel.mediaListTests) {
             sharedViewModel.setCurrentMedia(it)
             val action = R.id.action_categoryFragment_to_movieDetailFragment
             this.findNavController().navigate(action)
         }
-        view.findViewById<RecyclerView>(R.id.category_recycler_view).adapter = adapter
+        binding?.categoryRecyclerView?.adapter = adapter
+//        view.findViewById<RecyclerView>(R.id.category_recycler_view).adapter = adapter
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 }

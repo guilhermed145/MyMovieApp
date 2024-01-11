@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.myportfolio.mymovieapp.ui.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="Welcome!"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_categoryFragment"
             app:destination="@id/categoryFragment" />
@@ -20,13 +20,12 @@
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.myportfolio.mymovieapp.ui.CategoryFragment"
-        android:label="fragment_category"
-        tools:layout="@layout/fragment_category" >
-        <argument
+        android:label=""
+        tools:layout="@layout/fragment_category">
+<!--        <argument
             android:name="categoryName"
-            app:argType="string"
             android:defaultValue=""
-            />
+            app:argType="string" />-->
         <action
             android:id="@+id/action_categoryFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
@@ -34,6 +33,6 @@
     <fragment
         android:id="@+id/movieDetailFragment"
         android:name="com.myportfolio.mymovieapp.ui.MovieDetailFragment"
-        android:label="fragment_movie_detail"
+        android:label=""
         tools:layout="@layout/fragment_movie_detail" />
 </navigation>
