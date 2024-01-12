@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import com.myportfolio.mymovieapp.R
+import com.myportfolio.mymovieapp.databinding.FragmentMovieDetailBinding
 
 class MovieDetailFragment : Fragment() {
 
+    var binding: FragmentMovieDetailBinding? = null
     private val sharedViewModel: AppViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,15 +24,18 @@ class MovieDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie_detail, container, false)
+        val fragmentBinding = FragmentMovieDetailBinding.inflate(inflater, container, false)
+        binding = fragmentBinding
+        return fragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<TextView>(R.id.fragment_movie_detail_title)
-            .text = sharedViewModel.getCurrentMedia().mediaName
-        view.findViewById<TextView>(R.id.fragment_movie_detail_release_year)
-            .text = sharedViewModel.getCurrentMedia().releaseYear.toString()
+        binding?.fragmentMovieDetailTitle?.text = sharedViewModel.getCurrentMedia().mediaName
+        binding?.fragmentMovieDetailSubtitle?.text = sharedViewModel
+            .getCurrentMedia().releaseYear.toString()
+        binding?.fragmentMovieDetailGenreList?.adapter
+        binding?.fragmentMovieDetailCastList?.adapter
     }
 
 }

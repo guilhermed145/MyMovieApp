@@ -2,7 +2,7 @@
     <string name="app_name">MyMovieApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="movie_image">Movie image</string>
+    <string name="movie_image">Movie poster</string>
     <string name="popular">Popular</string>
     <string name="top_rated">Top Rated</string>
     <string name="upcoming">Upcoming</string>
