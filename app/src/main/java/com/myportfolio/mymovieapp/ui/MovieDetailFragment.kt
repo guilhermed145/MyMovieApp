@@ -27,7 +27,7 @@ class MovieDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.fragmentMovieDetailTitle.text = sharedViewModel.getCurrentMedia().mediaName
-        binding.fragmentMovieDetailReleaseYear.text = sharedViewModel.getCurrentMedia().releaseYear.toString()
+        binding.fragmentMovieDetailSubtitle.text = sharedViewModel.getCurrentMedia().releaseYear.toString()
     }
 
     override fun onDestroyView() {
