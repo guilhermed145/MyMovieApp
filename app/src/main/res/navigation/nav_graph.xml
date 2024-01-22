@@ -22,10 +22,6 @@
         android:name="com.myportfolio.mymovieapp.ui.CategoryFragment"
         android:label=""
         tools:layout="@layout/fragment_category">
-<!--        <argument
-            android:name="categoryName"
-            android:defaultValue=""
-            app:argType="string" />-->
         <action
             android:id="@+id/action_categoryFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
