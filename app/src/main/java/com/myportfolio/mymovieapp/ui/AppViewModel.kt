@@ -11,8 +11,8 @@ class AppViewModel: ViewModel () {
     private var currentMedia: Media =
         Media("", "", 0, genreList = listOf(), castList = listOf())
 
-    var genreListTest = listOf("Romance", "Action", "Comedy", "Fantasy", "Fiction")
-    var castListTest = listOf(
+    private var genreListTest = listOf("Romance", "Action", "Comedy", "Fantasy", "Fiction")
+    private var castListTest = listOf(
         CastMember("", "Mike Myers", "Shrek"),
         CastMember("", "Eddie Murphy", "Donkey"),
         CastMember("", "Chris miller", "Geppetto"),
