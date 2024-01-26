@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="category_title_fill">#BC8034</color>
+    <color name="movie_genre_text_color">#545454</color>
 </resources>

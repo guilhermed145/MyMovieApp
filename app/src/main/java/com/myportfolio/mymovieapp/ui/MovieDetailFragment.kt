@@ -28,6 +28,10 @@ class MovieDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.fragmentMovieDetailTitle.text = sharedViewModel.getCurrentMedia().mediaName
         binding.fragmentMovieDetailSubtitle.text = sharedViewModel.getCurrentMedia().releaseYear.toString()
+        binding.fragmentMovieDetailGenreList.adapter =
+            MovieGenreListAdapter(sharedViewModel.getCurrentMedia().genreList)
+        binding.fragmentMovieDetailCastList.adapter =
+            MovieCastListAdapter(sharedViewModel.getCurrentMedia().castList)
     }
 
     override fun onDestroyView() {
