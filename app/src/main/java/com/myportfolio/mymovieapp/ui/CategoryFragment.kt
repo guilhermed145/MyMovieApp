@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentCategoryBinding
+import com.myportfolio.mymovieapp.ui.adapters.MovieListAdapter
 
 /**
  * A simple [Fragment] subclass.
@@ -32,7 +33,8 @@ class CategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.categoryFragmentTitle.text = sharedViewModel.getCategoryFragmentTitle()
-        val adapter = MovieListAdapter(sharedViewModel.mediaListTests) {
+        val mediaList = sharedViewModel.uiState.value.currentMediaList
+        val adapter = MovieListAdapter(mediaList.toMutableList()) {
             sharedViewModel.setCurrentMedia(it)
             val action = R.id.action_categoryFragment_to_movieDetailFragment
             this.findNavController().navigate(action)

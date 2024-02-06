@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.myportfolio.mymovieapp.databinding.FragmentMovieDetailBinding
+import com.myportfolio.mymovieapp.ui.adapters.MovieCastListAdapter
+import com.myportfolio.mymovieapp.ui.adapters.MovieGenreListAdapter
+import com.squareup.picasso.Picasso
 
 class MovieDetailFragment : Fragment() {
 
@@ -26,17 +29,28 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Picasso.get()
+            .load(sharedViewModel.getCurrentMedia().bigPoster)
+            .fit().centerCrop()
+            .into(binding.fragmentMovieDetailImage)
         binding.fragmentMovieDetailTitle.text = sharedViewModel.getCurrentMedia().mediaName
         binding.fragmentMovieDetailSubtitle.text = sharedViewModel.getCurrentMedia().releaseYear.toString()
-        binding.fragmentMovieDetailGenreList.adapter =
-            MovieGenreListAdapter(sharedViewModel.getCurrentMedia().genreList)
-        binding.fragmentMovieDetailCastList.adapter =
-            MovieCastListAdapter(sharedViewModel.getCurrentMedia().castList)
+        binding.fragmentMovieDetailSynopsis.text = sharedViewModel.getCurrentMedia().synopsis
+        val genreAdapter =
+            MovieGenreListAdapter(sharedViewModel.uiState.value.currentGenreList.toMutableList())
+        binding.fragmentMovieDetailGenreList.adapter = genreAdapter
+        sharedViewModel.setGenreAdapterUpdate(genreAdapter::updateGenreListItems)
+        val castAdapter =
+            MovieCastListAdapter(sharedViewModel.uiState.value.currentCastList.toMutableList())
+        binding.fragmentMovieDetailCastList.adapter = castAdapter
+        sharedViewModel.setCastAdapterUpdate(castAdapter::updateCastListItems)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        sharedViewModel.setCurrentGenreList(listOf())
+        sharedViewModel.setCurrentCastList(listOf())
     }
 
 }
