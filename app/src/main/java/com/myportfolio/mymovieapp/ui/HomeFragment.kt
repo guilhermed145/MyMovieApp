@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentHomeBinding
 import com.myportfolio.mymovieapp.model.Media
+import com.myportfolio.mymovieapp.ui.adapters.MovieListAdapter
 
 /**
  * A simple [Fragment] subclass.
@@ -18,7 +19,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: AppViewModel by activityViewModels()
+    private val sharedViewModel: AppViewModel by activityViewModels(factoryProducer = {AppViewModel.Factory})
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,6 +28,7 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val fragmentBinding = FragmentHomeBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
+
         return fragmentBinding.root
     }
 
@@ -41,57 +43,64 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadCategories() {
-        bindMovieListView(
-            view = binding.movieList1.root,
-            title = getString(R.string.popular),
-            mediaType = getString(R.string.movies),
-            list = sharedViewModel.mediaListTests,
+        sharedViewModel.setPopularMoviesAdapterUpdate(
+            bindMovieListView(
+                view = binding.movieList1.root,
+                title = getString(R.string.popular),
+                mediaType = sharedViewModel.movieCategoryId,
+                list = sharedViewModel.uiState.value.popularMovies,
+            )
         )
-        bindMovieListView(
-            view = binding.movieList2.root,
-            title = getString(R.string.top_rated),
-            mediaType = getString(R.string.movies),
-            list = sharedViewModel.mediaListTests,
+        sharedViewModel.setTopRatedMoviesAdapterUpdate(
+            bindMovieListView(
+                view = binding.movieList2.root,
+                title = getString(R.string.top_rated),
+                mediaType = sharedViewModel.movieCategoryId,
+                list = sharedViewModel.uiState.value.topRatedMovies,
+            )
         )
-        bindMovieListView(
-            view = binding.movieList3.root,
-            title = getString(R.string.upcoming),
-            mediaType = getString(R.string.movies),
-            list = sharedViewModel.mediaListTests,
+        sharedViewModel.setUpcomingMoviesAdapterUpdate(
+            bindMovieListView(
+                view = binding.movieList3.root,
+                title = getString(R.string.upcoming),
+                mediaType = sharedViewModel.movieCategoryId,
+                list = sharedViewModel.uiState.value.upcomingMovies,
+            )
         )
-        bindMovieListView(
-            view = binding.seriesList1.root,
-            title = getString(R.string.popular),
-            mediaType = getString(R.string.series),
-            list = sharedViewModel.mediaListTests,
+        sharedViewModel.setPopularSeriesAdapterUpdate(
+            bindMovieListView(
+                view = binding.seriesList1.root,
+                title = getString(R.string.popular),
+                mediaType = sharedViewModel.tvCategoryId,
+                list = sharedViewModel.uiState.value.popularSeries,
+            )
         )
-        bindMovieListView(
-            view = binding.seriesList2.root,
-            title = getString(R.string.top_rated),
-            mediaType = getString(R.string.series),
-            list = sharedViewModel.mediaListTests,
-        )
-        bindMovieListView(
-            view = binding.seriesList3.root,
-            title = getString(R.string.upcoming),
-            mediaType = getString(R.string.series),
-            list = sharedViewModel.mediaListTests,
+        sharedViewModel.setTopRatedSeriesAdapterUpdate(
+            bindMovieListView(
+                view = binding.seriesList2.root,
+                title = getString(R.string.top_rated),
+                mediaType = sharedViewModel.tvCategoryId,
+                list = sharedViewModel.uiState.value.topRatedSeries,
+            )
         )
     }
 
     private fun bindMovieListView(
         view: MovieListView, title: String, mediaType: String, list: List<Media>
-    ) {
-        val adapter = MovieListAdapter(list) {
+    ): (List<Media>) -> Unit {
+        val adapter = MovieListAdapter(list.toMutableList()) {
+            sharedViewModel.setCurrentMediaType(mediaType)
             sharedViewModel.setCurrentMedia(it)
             view.findNavController().navigate(R.id.action_homeFragment_to_movieDetailFragment)
         }
         val onClick: (View) -> Unit = {
             sharedViewModel.setCurrentCategory(title)
             sharedViewModel.setCurrentMediaType(mediaType)
+            sharedViewModel.setCurrentMediaList(list)
             view.findNavController().navigate(R.id.action_homeFragment_to_categoryFragment)
         }
         view.bindList(title = title, adapter = adapter, onClick = onClick)
+        return adapter::updateMediaListItems
     }
 
 }
