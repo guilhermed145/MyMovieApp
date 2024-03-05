@@ -34,11 +34,14 @@ class CategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.categoryFragmentTitle.text = sharedViewModel.getCategoryFragmentTitle()
         val mediaList = sharedViewModel.uiState.value.currentMediaList
-        val adapter = MovieListAdapter(mediaList.toMutableList()) {
-            sharedViewModel.setCurrentMedia(it)
-            val action = R.id.action_categoryFragment_to_movieDetailFragment
-            this.findNavController().navigate(action)
-        }
+        val adapter = MovieListAdapter()
+        adapter.addData(mediaList.toMutableList())
+//        val adapter = MovieListAdapter(mediaList.toMutableList()) {
+//            sharedViewModel.setCurrentMedia(it)
+//            val action = R.id.action_categoryFragment_to_movieDetailFragment
+//            this.findNavController().navigate(action)
+//        }
+//        adapter.updateMediaListItems(mediaList)
         binding.categoryRecyclerView.adapter = adapter
     }
 

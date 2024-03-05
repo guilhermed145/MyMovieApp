@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.myportfolio.mymovieapp.R
@@ -13,12 +14,18 @@ import com.squareup.picasso.Picasso
 
 
 class MovieListAdapter(
-    private val mediaList: MutableList<Media>,
-    private val onItemClicked: (Media) -> Unit,
+//    private val mediaList: MutableList<Media>,
+//    private val onItemClicked: (Media) -> Unit,
 ):
     RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
 
-    class MovieListViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    private var onItemClicked: ((Media) -> Unit)? = null
+
+    fun setOnMediaClickListener(listener: (Media) -> Unit) {
+        onItemClicked = listener
+    }
+
+    inner class MovieListViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
         val image: ImageView = view.findViewById(R.id.movie_image)
         val movieTitle: TextView = view.findViewById(R.id.movie_title)
@@ -35,7 +42,7 @@ class MovieListAdapter(
     }
 
     override fun onBindViewHolder(holder: MovieListViewHolder, position: Int) {
-        val media: Media = mediaList[position]
+        val media: Media = differ.currentList[position]
         if (media.smallPoster.trim().isEmpty()) {
             holder.image.setImageResource(R.drawable.ic_launcher_background)
         } else {
@@ -46,50 +53,68 @@ class MovieListAdapter(
         holder.movieTitle.text = media.mediaName
         holder.movieReleaseYear.text = media.releaseYear.toString()
         holder.itemView.setOnClickListener {
-            onItemClicked(media)
+            onItemClicked?.invoke(media)
         }
     }
+
     override fun getItemCount(): Int {
-        return mediaList.size
+        return differ.currentList.size
     }
 
-    fun updateMediaListItems(newMediaList: List<Media>) {
-        val diffCallback = MediaDiffCallback(this.mediaList, newMediaList)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        this.mediaList.clear()
-        this.mediaList.addAll(newMediaList)
-        diffResult.dispatchUpdatesTo(this)
+    private val differCallBack = object: DiffUtil.ItemCallback<Media>() {
+        override fun areItemsTheSame(oldItem: Media, newItem: Media): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Media, newItem: Media): Boolean {
+            return oldItem == newItem
+        }
+
     }
+
+    val differ = AsyncListDiffer(this, differCallBack)
+
+    fun addData(mediaList: List<Media>) {
+        differ.submitList(mediaList)
+    }
+
+//    fun updateMediaListItems(newMediaList: List<Media>) {
+//        val diffCallback = MediaDiffCallback(this.mediaList, newMediaList)
+//        val diffResult = DiffUtil.calculateDiff(diffCallback)
+//        this.mediaList.clear()
+//        this.mediaList.addAll(newMediaList)
+//        diffResult.dispatchUpdatesTo(this)
+//    }
 
 }
 
-class MediaDiffCallback(oldMediaList: List<Media>, newMediaList: List<Media>) :
-    DiffUtil.Callback() {
-
-    private val myOldMediaList: List<Media>
-    private val myNewMediaList: List<Media>
-
-    init {
-        myOldMediaList = oldMediaList
-        myNewMediaList = newMediaList
-    }
-
-    override fun getOldListSize(): Int {
-        return myOldMediaList.size
-    }
-
-    override fun getNewListSize(): Int {
-        return myNewMediaList.size
-    }
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return myOldMediaList[oldItemPosition] == myNewMediaList[newItemPosition]
-    }
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldMedia: Media = myOldMediaList[oldItemPosition]
-        val newMedia: Media = myNewMediaList[newItemPosition]
-        return oldMedia.id == newMedia.id
-    }
-
-}
+//class MediaDiffCallback(oldMediaList: List<Media>, newMediaList: List<Media>) :
+//    DiffUtil.Callback() {
+//
+//    private val myOldMediaList: List<Media>
+//    private val myNewMediaList: List<Media>
+//
+//    init {
+//        myOldMediaList = oldMediaList
+//        myNewMediaList = newMediaList
+//    }
+//
+//    override fun getOldListSize(): Int {
+//        return myOldMediaList.size
+//    }
+//
+//    override fun getNewListSize(): Int {
+//        return myNewMediaList.size
+//    }
+//
+//    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+//        return myOldMediaList[oldItemPosition] == myNewMediaList[newItemPosition]
+//    }
+//
+//    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+//        val oldMedia: Media = myOldMediaList[oldItemPosition]
+//        val newMedia: Media = myNewMediaList[newItemPosition]
+//        return oldMedia.id == newMedia.id
+//    }
+//
+//}
