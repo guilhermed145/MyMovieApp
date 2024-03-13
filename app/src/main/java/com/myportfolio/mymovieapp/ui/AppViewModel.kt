@@ -37,11 +37,6 @@ data class AppUiState (
     var upcomingMovies: List<Media> = listOf(),
     var popularSeries: List<Media> = listOf(),
     var topRatedSeries: List<Media> = listOf(),
-//    var popularMoviesAdapterUpdate: (List<Media>) -> Unit = {},
-//    var topRatedMoviesAdapterUpdate: (List<Media>) -> Unit = {},
-//    var upcomingMoviesAdapterUpdate: (List<Media>) -> Unit = {},
-//    var popularSeriesAdapterUpdate: (List<Media>) -> Unit = {},
-//    var topRatedSeriesAdapterUpdate: (List<Media>) -> Unit = {},
     var genreAdapterUpdate: (List<String>) -> Unit = {},
     var castAdapterUpdate: (List<CastMember>) -> Unit = {},
 )
@@ -114,50 +109,6 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
         uiState.value.castAdapterUpdate(newCastList)
     }
 
-
-
-//    fun setPopularMoviesAdapterUpdate(adapterUpdateFunction: (List<Media>) -> Unit) {
-//        _uiState.update {
-//            it.copy(popularMoviesAdapterUpdate = adapterUpdateFunction)
-//        }
-//    }
-//
-//    fun setTopRatedMoviesAdapterUpdate(adapterUpdateFunction: (List<Media>) -> Unit) {
-//        _uiState.update {
-//            it.copy(topRatedMoviesAdapterUpdate = adapterUpdateFunction)
-//        }
-//    }
-//
-//    fun setUpcomingMoviesAdapterUpdate(adapterUpdateFunction: (List<Media>) -> Unit) {
-//        _uiState.update {
-//            it.copy(upcomingMoviesAdapterUpdate = adapterUpdateFunction)
-//        }
-//    }
-//
-//    fun setPopularSeriesAdapterUpdate(adapterUpdateFunction: (List<Media>) -> Unit) {
-//        _uiState.update {
-//            it.copy(popularSeriesAdapterUpdate = adapterUpdateFunction)
-//        }
-//    }
-//
-//    fun setTopRatedSeriesAdapterUpdate(adapterUpdateFunction: (List<Media>) -> Unit) {
-//        _uiState.update {
-//            it.copy(topRatedSeriesAdapterUpdate = adapterUpdateFunction)
-//        }
-//    }
-
-    fun setGenreAdapterUpdate(adapterUpdateFunction: (List<String>) -> Unit) {
-        _uiState.update {
-            it.copy(genreAdapterUpdate = adapterUpdateFunction)
-        }
-    }
-
-    fun setCastAdapterUpdate(adapterUpdateFunction: (List<CastMember>) -> Unit) {
-        _uiState.update {
-            it.copy(castAdapterUpdate = adapterUpdateFunction)
-        }
-    }
-
     private fun getPopularMovies() {
         viewModelScope.launch {
             try {
@@ -182,7 +133,6 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
                     )
                 }
             }
-//            uiState.value.popularMoviesAdapterUpdate(uiState.value.popularMovies)
         }
     }
 
@@ -210,7 +160,6 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
                     )
                 }
             }
-//            uiState.value.topRatedMoviesAdapterUpdate(uiState.value.topRatedMovies)
         }
     }
 
@@ -238,7 +187,6 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
                     )
                 }
             }
-//            uiState.value.upcomingMoviesAdapterUpdate(uiState.value.upcomingMovies)
         }
     }
 
@@ -266,7 +214,6 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
                     )
                 }
             }
-//            uiState.value.popularSeriesAdapterUpdate(uiState.value.popularSeries)
         }
     }
 
@@ -294,7 +241,6 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
                     )
                 }
             }
-//            uiState.value.topRatedSeriesAdapterUpdate(uiState.value.topRatedSeries)
         }
     }
 

@@ -6,16 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.myportfolio.mymovieapp.databinding.FragmentMovieDetailBinding
 import com.myportfolio.mymovieapp.ui.adapters.MovieCastListAdapter
 import com.myportfolio.mymovieapp.ui.adapters.MovieGenreListAdapter
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.launch
 
 class MovieDetailFragment : Fragment() {
 
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
     private val sharedViewModel: AppViewModel by activityViewModels()
+
+    private val genreAdapter = MovieGenreListAdapter()
+    private val castAdapter = MovieCastListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,21 +34,9 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Picasso.get()
-            .load(sharedViewModel.getCurrentMedia().bigPoster)
-            .fit().centerCrop()
-            .into(binding.fragmentMovieDetailImage)
-        binding.fragmentMovieDetailTitle.text = sharedViewModel.getCurrentMedia().mediaName
-        binding.fragmentMovieDetailSubtitle.text = sharedViewModel.getCurrentMedia().releaseYear.toString()
-        binding.fragmentMovieDetailSynopsis.text = sharedViewModel.getCurrentMedia().synopsis
-        val genreAdapter =
-            MovieGenreListAdapter(sharedViewModel.uiState.value.currentGenreList.toMutableList())
         binding.fragmentMovieDetailGenreList.adapter = genreAdapter
-        sharedViewModel.setGenreAdapterUpdate(genreAdapter::updateGenreListItems)
-        val castAdapter =
-            MovieCastListAdapter(sharedViewModel.uiState.value.currentCastList.toMutableList())
         binding.fragmentMovieDetailCastList.adapter = castAdapter
-        sharedViewModel.setCastAdapterUpdate(castAdapter::updateCastListItems)
+        loadMovieData()
     }
 
     override fun onDestroyView() {
@@ -51,6 +44,24 @@ class MovieDetailFragment : Fragment() {
         _binding = null
         sharedViewModel.setCurrentGenreList(listOf())
         sharedViewModel.setCurrentCastList(listOf())
+    }
+
+    private fun loadMovieData() {
+        Picasso.get()
+            .load(sharedViewModel.getCurrentMedia().bigPoster)
+            .fit().centerCrop()
+            .into(binding.fragmentMovieDetailImage)
+
+        binding.fragmentMovieDetailTitle.text = sharedViewModel.getCurrentMedia().mediaName
+        binding.fragmentMovieDetailSubtitle.text = sharedViewModel.getCurrentMedia().releaseYear.toString()
+        binding.fragmentMovieDetailSynopsis.text = sharedViewModel.getCurrentMedia().synopsis
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            sharedViewModel.uiState.collect {
+                genreAdapter.addData(it.currentGenreList.toMutableList())
+                castAdapter.addData(it.currentCastList.toMutableList())
+            }
+        }
     }
 
 }

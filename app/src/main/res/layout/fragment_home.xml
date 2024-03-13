@@ -16,43 +16,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="Discover Movies"
+            android:text="@string/discover_movies"
             style="@style/Widget.MyMovieApp.HomeTitleTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
-<!--        <include-->
-<!--            layout="@layout/movie_list"-->
-<!--            android:id="@+id/movie_list1"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/discover_movies"-->
-<!--            />-->
+        <include
+            layout="@layout/movie_list"
+            android:id="@+id/movie_list1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/discover_movies"
+            />
 
-<!--        <include-->
-<!--            layout="@layout/movie_list"-->
-<!--            android:id="@+id/movie_list2"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/movie_list1" />-->
+        <include
+            layout="@layout/movie_list"
+            android:id="@+id/movie_list2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/movie_list1" />
 
-<!--        <include-->
-<!--            layout="@layout/movie_list"-->
-<!--            android:id="@+id/movie_list3"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/movie_list2" />-->
+        <include
+            layout="@layout/movie_list"
+            android:id="@+id/movie_list3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/movie_list2" />
 
         <TextView
             android:id="@+id/series_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="Discover TV Series"
+            android:text="@string/discover_tv_series"
             style="@style/Widget.MyMovieApp.HomeTitleTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/series_list1"
+            app:layout_constraintTop_toBottomOf="@id/movie_list3"
             />
 
         <include
@@ -63,19 +63,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/series_title" />
 
-<!--        <include-->
-<!--            layout="@layout/movie_list"-->
-<!--            android:id="@+id/series_list2"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/series_list1" />-->
-
-<!--        <include-->
-<!--            layout="@layout/movie_list"-->
-<!--            android:id="@+id/series_list3"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/series_list2" />-->
+        <include
+            layout="@layout/movie_list"
+            android:id="@+id/series_list2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/series_list1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
