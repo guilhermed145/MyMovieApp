@@ -8,6 +8,7 @@ import com.myportfolio.mymovieapp.data.dto.SerieResultDTO
 import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.model.MediaGenre
+import com.myportfolio.mymovieapp.util.Constants
 
 /**
  * The Repository object for the movies data.
@@ -26,6 +27,7 @@ interface MovieRepository {
 class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : MovieRepository {
 
     private val mediaBigPosterBaseUrl = "https://image.tmdb.org/t/p/original/"
+    private val mediaMediumPosterBaseUrl = "https://image.tmdb.org/t/p/w500/"
     private val mediaSmallPosterBaseUrl = "https://image.tmdb.org/t/p/w92/"
     private val apiKey = BuildConfig.API_KEY
 
@@ -82,10 +84,12 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
             id = id,
             mediaName = title,
             bigPoster = mediaBigPosterBaseUrl + poster_path,
+            mediumPoster = mediaMediumPosterBaseUrl + poster_path,
             smallPoster = mediaSmallPosterBaseUrl + poster_path,
             releaseYear = toReleaseYear(release_date),
             synopsis = overview,
             genreIdList = genre_ids,
+            mediaType = Constants.movieTypeId
         )
 
     private fun SerieResultDTO.toMedia(): Media =
@@ -93,10 +97,12 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
             id = id,
             mediaName = name,
             bigPoster = mediaBigPosterBaseUrl + poster_path,
+            mediumPoster = mediaMediumPosterBaseUrl + poster_path,
             smallPoster = mediaSmallPosterBaseUrl + poster_path,
             releaseYear = toReleaseYear(first_air_date),
             synopsis = overview,
             genreIdList = genre_ids,
+            mediaType = Constants.seriesTypeId
         )
 
     private fun toReleaseYear(releaseDate: String): Int {

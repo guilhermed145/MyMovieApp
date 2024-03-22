@@ -8,4 +8,6 @@
     <string name="upcoming">Upcoming</string>
     <string name="movies">Movies</string>
     <string name="series">TV Series</string>
+    <string name="discover_movies">Discover Movies</string>
+    <string name="discover_tv_series">Discover TV Series</string>
 </resources>
