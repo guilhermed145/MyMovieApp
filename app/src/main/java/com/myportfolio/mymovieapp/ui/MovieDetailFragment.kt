@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.myportfolio.mymovieapp.databinding.FragmentMovieDetailBinding
 import com.myportfolio.mymovieapp.ui.adapters.MovieCastListAdapter
 import com.myportfolio.mymovieapp.ui.adapters.MovieGenreListAdapter
+import com.myportfolio.mymovieapp.ui.viewmodels.AppViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 

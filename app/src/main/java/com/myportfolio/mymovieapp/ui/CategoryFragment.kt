@@ -12,6 +12,7 @@ import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentCategoryBinding
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.ui.adapters.MovieListAdapter
+import com.myportfolio.mymovieapp.ui.viewmodels.AppViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -44,6 +45,7 @@ class CategoryFragment : Fragment() {
             view.findNavController().navigate(R.id.action_categoryFragment_to_movieDetailFragment)
         }
         adapter.setOnMediaClickListener(onMediaClicked)
+        adapter.setMediaPosterSizeToBig()
 
         loadCategoryData()
     }

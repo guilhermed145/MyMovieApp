@@ -1,4 +1,4 @@
-package com.myportfolio.mymovieapp.ui
+package com.myportfolio.mymovieapp.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.myportfolio.mymovieapp.App
 import com.myportfolio.mymovieapp.data.MovieRepository
-import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,35 +16,17 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-data class AppUiState (
-    val currentCategoryTitle: String = "",
-    val currentMediaType: String = "",
-    val currentMediaList: List<Media> = listOf(),
-    val currentMedia: Media =
-        Media(
-            id = 0,
-            mediaName ="",
-            bigPoster = "",
-            smallPoster = "",
-            releaseYear = 0,
-            genreIdList = listOf()
-        ),
-    var currentCastList: List<CastMember> = listOf(),
-    var currentGenreList: List<String> = listOf(),
+data class HomeUiState(
     var popularMovies: List<Media> = listOf(),
     var topRatedMovies: List<Media> = listOf(),
     var upcomingMovies: List<Media> = listOf(),
     var popularSeries: List<Media> = listOf(),
     var topRatedSeries: List<Media> = listOf(),
-    var genreAdapterUpdate: (List<String>) -> Unit = {},
-    var castAdapterUpdate: (List<CastMember>) -> Unit = {},
 )
 
-class AppViewModel(private val repository: MovieRepository): ViewModel () {
+class HomeViewModel(private val repository: MovieRepository): ViewModel() {
 
-    val movieCategoryId = "movie"
-    val tvCategoryId = "tv"
-    private val _uiState = MutableStateFlow(AppUiState())
+    private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -54,59 +35,6 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
         getUpcomingMovies()
         getPopularSeries()
         getTopRatedSeries()
-    }
-
-    fun setCurrentCategory(categoryTitle: String) {
-        _uiState.update {
-            it.copy(currentCategoryTitle = categoryTitle)
-        }
-    }
-
-    fun setCurrentMediaType(mediaType: String) {
-        _uiState.update {
-            it.copy(currentMediaType = mediaType)
-        }
-    }
-
-    fun setCurrentMediaList(list: List<Media>) {
-        _uiState.update {
-            it.copy(currentMediaList = list)
-        }
-    }
-
-    fun setCurrentMedia(media: Media) {
-        _uiState.update {
-            it.copy(currentMedia = media)
-        }
-        getCurrentCastList()
-        getCurrentGenreList()
-    }
-
-    fun getCurrentMedia(): Media {
-        return uiState.value.currentMedia
-    }
-
-    fun getCategoryFragmentTitle(): String {
-        val mediaTitle: String = uiState.value.currentCategoryTitle
-        return if (uiState.value.currentMediaType == movieCategoryId) {
-            mediaTitle.plus(" Movies")
-        } else {
-            mediaTitle.plus(" TV Series")
-        }
-    }
-
-    fun setCurrentGenreList(newGenreList: List<String>) {
-            _uiState.update {
-                it.copy(currentGenreList = newGenreList)
-            }
-            uiState.value.genreAdapterUpdate(newGenreList)
-        }
-
-    fun setCurrentCastList(newCastList: List<CastMember>) {
-        _uiState.update {
-            it.copy(currentCastList = newCastList)
-        }
-        uiState.value.castAdapterUpdate(newCastList)
     }
 
     private fun getPopularMovies() {
@@ -244,74 +172,6 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
         }
     }
 
-    private fun getCurrentGenreList() {
-        viewModelScope.launch {
-            try {
-                val apiData = repository.getGenreList(uiState.value.currentMediaType)
-                val genreList: MutableList<String> = mutableListOf()
-                for (genreId in uiState.value.currentMedia.genreIdList) {
-                    for (genre in apiData) {
-                        if (genreId == genre.id) {
-                            genreList.add(genre.name)
-                        }
-                    }
-                }
-                _uiState.update {
-                    it.copy(
-                        currentGenreList = genreList
-                    )
-                }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getCurrentGenreList()", e)
-                _uiState.update {
-                    it.copy(
-                        currentGenreList = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getCurrentGenreList()", e)
-                _uiState.update {
-                    it.copy(
-                        currentGenreList = listOf()
-                    )
-                }
-            }
-            uiState.value.genreAdapterUpdate(uiState.value.currentGenreList)
-        }
-    }
-
-    private fun getCurrentCastList() {
-        viewModelScope.launch {
-            try {
-                val apiData = if (uiState.value.currentMediaType == tvCategoryId) {
-                    repository.getSeriesCast(uiState.value.currentMedia.id)
-                } else {
-                    repository.getMovieCast(uiState.value.currentMedia.id)
-                }
-                _uiState.update {
-                    it.copy(
-                        currentCastList = apiData
-                    )
-                }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getCurrentCastList()", e)
-                _uiState.update {
-                    it.copy(
-                        currentCastList = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getCurrentCastList()", e)
-                _uiState.update {
-                    it.copy(
-                        currentCastList = listOf()
-                    )
-                }
-            }
-            uiState.value.castAdapterUpdate(uiState.value.currentCastList)
-        }
-    }
-
     /**
      * Factory for the viewModel that takes the repository as a dependency.
      */
@@ -321,7 +181,7 @@ class AppViewModel(private val repository: MovieRepository): ViewModel () {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as App)
                 val appRepository = application.container.appRepository
-                AppViewModel(repository = appRepository)
+                HomeViewModel(repository = appRepository)
             }
         }
     }

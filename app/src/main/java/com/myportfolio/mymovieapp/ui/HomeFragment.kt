@@ -6,11 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentHomeBinding
 import com.myportfolio.mymovieapp.model.Media
+import com.myportfolio.mymovieapp.ui.viewmodels.AppViewModel
+import com.myportfolio.mymovieapp.ui.viewmodels.HomeViewModel
+import com.myportfolio.mymovieapp.util.Constants
 import kotlinx.coroutines.launch
 
 /**
@@ -20,7 +24,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: AppViewModel by activityViewModels(factoryProducer = {AppViewModel.Factory})
+    private val sharedViewModel: AppViewModel by activityViewModels(factoryProducer = { AppViewModel.Factory})
+    private val homeViewModel: HomeViewModel by viewModels(factoryProducer = { HomeViewModel.Factory})
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,51 +50,51 @@ class HomeFragment : Fragment() {
 
     private fun loadCategories() {
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.uiState.collect {
+            homeViewModel.uiState.collect {
                 bindMovieListView(
                     view = binding.movieList1.root,
                     title = getString(R.string.popular),
-                    mediaType = sharedViewModel.movieCategoryId,
+                    mediaType = Constants.movieTypeId,
                     list = it.popularMovies,
                 )
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.uiState.collect {
+            homeViewModel.uiState.collect {
                 bindMovieListView(
                     view = binding.movieList2.root,
                     title = getString(R.string.top_rated),
-                    mediaType = sharedViewModel.movieCategoryId,
+                    mediaType = Constants.movieTypeId,
                     list = it.topRatedMovies,
                 )
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.uiState.collect {
+            homeViewModel.uiState.collect {
                 bindMovieListView(
                     view = binding.movieList3.root,
                     title = getString(R.string.upcoming),
-                    mediaType = sharedViewModel.movieCategoryId,
+                    mediaType = Constants.movieTypeId,
                     list = it.upcomingMovies,
                 )
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.uiState.collect {
+            homeViewModel.uiState.collect {
                 bindMovieListView(
                     view = binding.seriesList1.root,
                     title = getString(R.string.popular),
-                    mediaType = sharedViewModel.tvCategoryId,
+                    mediaType = Constants.seriesTypeId,
                     list = it.popularSeries,
                 )
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.uiState.collect {
+            homeViewModel.uiState.collect {
                 bindMovieListView(
                     view = binding.seriesList2.root,
                     title = getString(R.string.top_rated),
-                    mediaType = sharedViewModel.tvCategoryId,
+                    mediaType = Constants.seriesTypeId,
                     list = it.topRatedSeries,
                 )
             }

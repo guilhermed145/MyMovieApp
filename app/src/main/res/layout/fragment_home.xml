@@ -15,12 +15,13 @@
             android:id="@+id/discover_movies"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="16dp"
+            android:paddingHorizontal="16dp"
             android:text="@string/discover_movies"
             style="@style/Widget.MyMovieApp.HomeTitleTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <include
             layout="@layout/movie_list"
