@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.myportfolio.mymovieapp.databinding.FragmentMovieDetailBinding
 import com.myportfolio.mymovieapp.ui.adapters.MovieCastListAdapter
 import com.myportfolio.mymovieapp.ui.adapters.MovieGenreListAdapter
@@ -58,9 +60,11 @@ class MovieDetailFragment : Fragment() {
         binding.fragmentMovieDetailSynopsis.text = sharedViewModel.getCurrentMedia().synopsis
 
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.uiState.collect {
-                genreAdapter.addData(it.currentGenreList.toMutableList())
-                castAdapter.addData(it.currentCastList.toMutableList())
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.uiState.collect {
+                    genreAdapter.addData(it.currentGenreList.toMutableList())
+                    castAdapter.addData(it.currentCastList.toMutableList())
+                }
             }
         }
     }

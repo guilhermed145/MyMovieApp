@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentHomeBinding
@@ -50,53 +52,63 @@ class HomeFragment : Fragment() {
 
     private fun loadCategories() {
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.uiState.collect {
-                bindMovieListView(
-                    view = binding.movieList1.root,
-                    title = getString(R.string.popular),
-                    mediaType = Constants.movieTypeId,
-                    list = it.popularMovies,
-                )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.uiState.collect {
+                    bindMovieListView(
+                        view = binding.movieList1.root,
+                        title = getString(R.string.popular),
+                        mediaType = Constants.movieTypeId,
+                        list = it.popularMovies,
+                    )
+                }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.uiState.collect {
-                bindMovieListView(
-                    view = binding.movieList2.root,
-                    title = getString(R.string.top_rated),
-                    mediaType = Constants.movieTypeId,
-                    list = it.topRatedMovies,
-                )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.uiState.collect {
+                    bindMovieListView(
+                        view = binding.movieList2.root,
+                        title = getString(R.string.top_rated),
+                        mediaType = Constants.movieTypeId,
+                        list = it.topRatedMovies,
+                    )
+                }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.uiState.collect {
-                bindMovieListView(
-                    view = binding.movieList3.root,
-                    title = getString(R.string.upcoming),
-                    mediaType = Constants.movieTypeId,
-                    list = it.upcomingMovies,
-                )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.uiState.collect {
+                    bindMovieListView(
+                        view = binding.movieList3.root,
+                        title = getString(R.string.upcoming),
+                        mediaType = Constants.movieTypeId,
+                        list = it.upcomingMovies,
+                    )
+                }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.uiState.collect {
-                bindMovieListView(
-                    view = binding.seriesList1.root,
-                    title = getString(R.string.popular),
-                    mediaType = Constants.seriesTypeId,
-                    list = it.popularSeries,
-                )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.uiState.collect {
+                    bindMovieListView(
+                        view = binding.seriesList1.root,
+                        title = getString(R.string.popular),
+                        mediaType = Constants.seriesTypeId,
+                        list = it.popularSeries,
+                    )
+                }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.uiState.collect {
-                bindMovieListView(
-                    view = binding.seriesList2.root,
-                    title = getString(R.string.top_rated),
-                    mediaType = Constants.seriesTypeId,
-                    list = it.topRatedSeries,
-                )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.uiState.collect {
+                    bindMovieListView(
+                        view = binding.seriesList2.root,
+                        title = getString(R.string.top_rated),
+                        mediaType = Constants.seriesTypeId,
+                        list = it.topRatedSeries,
+                    )
+                }
             }
         }
     }

@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentCategoryBinding
@@ -53,8 +55,10 @@ class CategoryFragment : Fragment() {
     private fun loadCategoryData() {
         binding.categoryFragmentTitle.text = sharedViewModel.getCategoryFragmentTitle()
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.uiState.collect {
-                adapter.addData(it.currentMediaList)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.uiState.collect {
+                    adapter.addData(it.currentMediaList)
+                }
             }
         }
     }
