@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.myportfolio.mymovieapp.App
 import com.myportfolio.mymovieapp.data.MovieRepository
 import com.myportfolio.mymovieapp.model.Media
+import com.myportfolio.mymovieapp.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-data class HomeUiState(
+data class HomeUiState (
     var popularMovies: List<Media> = listOf(),
     var topRatedMovies: List<Media> = listOf(),
     var upcomingMovies: List<Media> = listOf(),
@@ -40,7 +41,7 @@ class HomeViewModel(private val repository: MovieRepository): ViewModel() {
     private fun getPopularMovies() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getPopularMovies()
+                val apiData = repository.getMovies(Constants.popularCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         popularMovies = apiData
@@ -67,7 +68,7 @@ class HomeViewModel(private val repository: MovieRepository): ViewModel() {
     private fun getTopRatedMovies() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getTopRatedMovies()
+                val apiData = repository.getMovies(Constants.topRatedCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         topRatedMovies = apiData
@@ -94,7 +95,7 @@ class HomeViewModel(private val repository: MovieRepository): ViewModel() {
     private fun getUpcomingMovies() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getUpcomingMovies()
+                val apiData = repository.getMovies(Constants.upcomingCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         upcomingMovies = apiData
@@ -121,7 +122,7 @@ class HomeViewModel(private val repository: MovieRepository): ViewModel() {
     private fun getPopularSeries() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getPopularSeries()
+                val apiData = repository.getSeries(Constants.popularCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         popularSeries = apiData
@@ -148,7 +149,7 @@ class HomeViewModel(private val repository: MovieRepository): ViewModel() {
     private fun getTopRatedSeries() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getTopRatedSeries()
+                val apiData = repository.getSeries(Constants.topRatedCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         topRatedSeries = apiData

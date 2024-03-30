@@ -14,13 +14,9 @@ import com.myportfolio.mymovieapp.util.Constants
  * The Repository object for the movies data.
  */
 interface MovieRepository {
-    suspend fun getPopularMovies(): List<Media>
-    suspend fun getTopRatedMovies(): List<Media>
-    suspend fun getUpcomingMovies(): List<Media>
-    suspend fun getPopularSeries(): List<Media>
-    suspend fun getTopRatedSeries(): List<Media>
-    suspend fun getMovieCast(movieId: Int): List<CastMember>
-    suspend fun getSeriesCast(seriesId: Int): List<CastMember>
+    suspend fun getMovies(categoryId: String, page: Int): List<Media>
+    suspend fun getSeries(categoryId: String, page: Int): List<Media>
+    suspend fun getCastList(categoryId: String, mediaId: Int): List<CastMember>
     suspend fun getGenreList(mediaType: String): List<MediaGenre>
 }
 
@@ -31,44 +27,20 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
     private val mediaSmallPosterBaseUrl = "https://image.tmdb.org/t/p/w92/"
     private val apiKey = BuildConfig.API_KEY
 
-    override suspend fun getPopularMovies(): List<Media> {
-        return moviesApiService.getMovies("popular", apiKey).results.map {
+    override suspend fun getMovies(categoryId: String, page: Int): List<Media> {
+        return moviesApiService.getMovies(categoryId, apiKey, page).results.map {
             it.toMedia()
         }
     }
 
-    override suspend fun getTopRatedMovies(): List<Media> {
-        return moviesApiService.getMovies("top_rated", apiKey).results.map {
+    override suspend fun getSeries(categoryId: String, page: Int): List<Media> {
+        return moviesApiService.getSeries(categoryId, apiKey, page).results.map {
             it.toMedia()
         }
     }
 
-    override suspend fun getUpcomingMovies(): List<Media> {
-        return moviesApiService.getMovies("upcoming", apiKey).results.map {
-            it.toMedia()
-        }
-    }
-
-    override suspend fun getPopularSeries(): List<Media> {
-        return moviesApiService.getSeries("popular", apiKey).results.map {
-            it.toMedia()
-        }
-    }
-
-    override suspend fun getTopRatedSeries(): List<Media> {
-        return moviesApiService.getSeries("top_rated", apiKey).results.map {
-            it.toMedia()
-        }
-    }
-
-    override suspend fun getMovieCast(movieId: Int): List<CastMember> {
-        return moviesApiService.getMovieCast(movieId.toString(), apiKey).cast.map {
-            it.toCastMember()
-        }
-    }
-
-    override suspend fun getSeriesCast(seriesId: Int): List<CastMember> {
-        return moviesApiService.getSeriesCast(seriesId.toString(), apiKey).cast.map {
+    override suspend fun getCastList(categoryId: String, mediaId: Int): List<CastMember> {
+        return moviesApiService.getCastList(categoryId, mediaId.toString(), apiKey).cast.map {
             it.toCastMember()
         }
     }
@@ -120,7 +92,6 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
             id = id,
             name = name
         )
-
 
 }
 

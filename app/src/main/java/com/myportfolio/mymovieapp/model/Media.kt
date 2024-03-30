@@ -1,6 +1,7 @@
 package com.myportfolio.mymovieapp.model
 
 import com.myportfolio.mymovieapp.util.Constants
+import java.io.Serializable
 
 data class Media(
     var id: Int = 0,
@@ -12,4 +13,4 @@ data class Media(
     var synopsis: String = "",
     var genreIdList: List<Int> = listOf(),
     var mediaType: String = Constants.movieTypeId
-)
+) : Serializable

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -14,7 +14,8 @@ import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentCategoryBinding
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.ui.adapters.MovieListAdapter
-import com.myportfolio.mymovieapp.ui.viewmodels.AppViewModel
+import com.myportfolio.mymovieapp.ui.viewmodels.CategoryViewModel
+import com.myportfolio.mymovieapp.util.Constants
 import kotlinx.coroutines.launch
 
 /**
@@ -24,9 +25,21 @@ class CategoryFragment : Fragment() {
 
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: AppViewModel by activityViewModels()
+    private val categoryViewModel: CategoryViewModel by viewModels(factoryProducer = {CategoryViewModel.Factory})
 
     private val adapter = MovieListAdapter()
+
+    private var categoryTitle = ""
+    private var currentCategory = ""
+    private var currentMediaType = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        categoryTitle = arguments?.getString("categoryTitle") ?: getString(R.string.movies)
+        currentCategory = arguments?.getString("currentMediaCategory") ?: Constants.popularCategoryId
+        currentMediaType = arguments?.getString("currentMediaType") ?: Constants.movieTypeId
+        categoryViewModel.getCategoryList(currentMediaType, currentCategory)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,12 +53,13 @@ class CategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.categoryRecyclerView.adapter = adapter
 
         val onMediaClicked: (Media) -> Unit = {
-            sharedViewModel.setCurrentMedia(it)
-            view.findNavController().navigate(R.id.action_categoryFragment_to_movieDetailFragment)
+            val movieDetailFragmentBundle = Bundle()
+            movieDetailFragmentBundle.putSerializable("currentMedia", it)
+            view.findNavController().navigate(R.id.action_categoryFragment_to_movieDetailFragment, movieDetailFragmentBundle)
         }
+        binding.categoryRecyclerView.adapter = adapter
         adapter.setOnMediaClickListener(onMediaClicked)
         adapter.setMediaPosterSizeToBig()
 
@@ -53,14 +67,21 @@ class CategoryFragment : Fragment() {
     }
 
     private fun loadCategoryData() {
-        binding.categoryFragmentTitle.text = sharedViewModel.getCategoryFragmentTitle()
+
+        binding.categoryFragmentTitle.text = if (currentMediaType == Constants.movieTypeId) {
+            categoryTitle.plus(" " + getString(R.string.movies))
+        } else {
+            categoryTitle.plus(" " + getString(R.string.series))
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.uiState.collect {
+                categoryViewModel.uiState.collect {
                     adapter.addData(it.currentMediaList)
                 }
             }
         }
+
     }
 
     override fun onDestroyView() {

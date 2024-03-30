@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,7 +13,6 @@ import androidx.navigation.findNavController
 import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentHomeBinding
 import com.myportfolio.mymovieapp.model.Media
-import com.myportfolio.mymovieapp.ui.viewmodels.AppViewModel
 import com.myportfolio.mymovieapp.ui.viewmodels.HomeViewModel
 import com.myportfolio.mymovieapp.util.Constants
 import kotlinx.coroutines.launch
@@ -26,8 +24,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: AppViewModel by activityViewModels(factoryProducer = { AppViewModel.Factory})
-    private val homeViewModel: HomeViewModel by viewModels(factoryProducer = { HomeViewModel.Factory})
+    private val homeViewModel: HomeViewModel by viewModels(factoryProducer = {HomeViewModel.Factory})
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +53,7 @@ class HomeFragment : Fragment() {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
                         view = binding.movieList1.root,
-                        title = getString(R.string.popular),
+                        category = Constants.popularCategoryId,
                         mediaType = Constants.movieTypeId,
                         list = it.popularMovies,
                     )
@@ -68,7 +65,7 @@ class HomeFragment : Fragment() {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
                         view = binding.movieList2.root,
-                        title = getString(R.string.top_rated),
+                        category = Constants.topRatedCategoryId,
                         mediaType = Constants.movieTypeId,
                         list = it.topRatedMovies,
                     )
@@ -80,7 +77,7 @@ class HomeFragment : Fragment() {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
                         view = binding.movieList3.root,
-                        title = getString(R.string.upcoming),
+                        category = Constants.upcomingCategoryId,
                         mediaType = Constants.movieTypeId,
                         list = it.upcomingMovies,
                     )
@@ -92,7 +89,7 @@ class HomeFragment : Fragment() {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
                         view = binding.seriesList1.root,
-                        title = getString(R.string.popular),
+                        category = Constants.popularCategoryId,
                         mediaType = Constants.seriesTypeId,
                         list = it.popularSeries,
                     )
@@ -104,7 +101,7 @@ class HomeFragment : Fragment() {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
                         view = binding.seriesList2.root,
-                        title = getString(R.string.top_rated),
+                        category = Constants.topRatedCategoryId,
                         mediaType = Constants.seriesTypeId,
                         list = it.topRatedSeries,
                     )
@@ -114,19 +111,25 @@ class HomeFragment : Fragment() {
     }
 
     private fun bindMovieListView(
-        view: MovieListView, title: String, mediaType: String, list: List<Media>
+        view: MovieListView, category: String, mediaType: String, list: List<Media>
     ) {
+        val categoryTitle = when (category) {
+            Constants.popularCategoryId -> getString(R.string.popular)
+            Constants.topRatedCategoryId -> getString(R.string.top_rated)
+            else -> getString(R.string.upcoming)
+        }
         val onMediaClicked: (Media) -> Unit = {
-            sharedViewModel.setCurrentMediaType(mediaType)
-            sharedViewModel.setCurrentMedia(it)
-            view.findNavController().navigate(R.id.action_homeFragment_to_movieDetailFragment)
+            val movieDetailFragmentBundle = Bundle()
+            movieDetailFragmentBundle.putSerializable("currentMedia", it)
+            view.findNavController().navigate(R.id.action_homeFragment_to_movieDetailFragment, movieDetailFragmentBundle)
         }
-        val onTitleClicked: (View) -> Unit = {
-            sharedViewModel.setCurrentCategory(title)
-            sharedViewModel.setCurrentMediaType(mediaType)
-            sharedViewModel.setCurrentMediaList(list)
-            view.findNavController().navigate(R.id.action_homeFragment_to_categoryFragment)
+        val onCategoryTitleClicked: (View) -> Unit = {
+            val categoryFragmentBundle = Bundle()
+            categoryFragmentBundle.putString("categoryTitle", categoryTitle)
+            categoryFragmentBundle.putString("currentMediaCategory", category)
+            categoryFragmentBundle.putString("currentMediaType", mediaType)
+            view.findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, categoryFragmentBundle)
         }
-        view.bindList(title = title, mediaList = list, onTitleClicked = onTitleClicked, onMediaClicked = onMediaClicked)
+        view.bindList(title = categoryTitle, mediaList = list, onTitleClicked = onCategoryTitleClicked, onMediaClicked = onMediaClicked)
     }
 }

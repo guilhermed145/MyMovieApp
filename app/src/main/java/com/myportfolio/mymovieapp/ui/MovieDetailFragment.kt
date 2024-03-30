@@ -1,18 +1,20 @@
 package com.myportfolio.mymovieapp.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.myportfolio.mymovieapp.databinding.FragmentMovieDetailBinding
+import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.ui.adapters.MovieCastListAdapter
 import com.myportfolio.mymovieapp.ui.adapters.MovieGenreListAdapter
-import com.myportfolio.mymovieapp.ui.viewmodels.AppViewModel
+import com.myportfolio.mymovieapp.ui.viewmodels.MovieDetailViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
@@ -20,15 +22,22 @@ class MovieDetailFragment : Fragment() {
 
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: AppViewModel by activityViewModels()
-
+    private val movieDetailViewModel: MovieDetailViewModel by viewModels(factoryProducer = {MovieDetailViewModel.Factory})
     private val genreAdapter = MovieGenreListAdapter()
     private val castAdapter = MovieCastListAdapter()
+    private var currentMedia = Media()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        @Suppress("DEPRECATION")
+        currentMedia = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            arguments?.getSerializable("currentMedia", Media::class.java) ?: Media()
+        else
+            arguments?.getSerializable("currentMedia") as Media
+        movieDetailViewModel.getGenreList(currentMedia)
+        movieDetailViewModel.getCastList(currentMedia)
         // Inflate the layout for this fragment
         val fragmentBinding = FragmentMovieDetailBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
@@ -45,25 +54,27 @@ class MovieDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        sharedViewModel.setCurrentGenreList(listOf())
-        sharedViewModel.setCurrentCastList(listOf())
+        movieDetailViewModel.setCurrentGenreList(listOf())
+        movieDetailViewModel.setCurrentCastList(listOf())
     }
 
     private fun loadMovieData() {
-        Picasso.get()
-            .load(sharedViewModel.getCurrentMedia().bigPoster)
-            .fit().centerCrop()
-            .into(binding.fragmentMovieDetailImage)
+        if (currentMedia.bigPoster != "") {
+            Picasso.get()
+                .load(currentMedia.bigPoster)
+                .fit().centerCrop()
+                .into(binding.fragmentMovieDetailImage)
+        }
 
-        binding.fragmentMovieDetailTitle.text = sharedViewModel.getCurrentMedia().mediaName
-        binding.fragmentMovieDetailSubtitle.text = sharedViewModel.getCurrentMedia().releaseYear.toString()
-        binding.fragmentMovieDetailSynopsis.text = sharedViewModel.getCurrentMedia().synopsis
+        binding.fragmentMovieDetailTitle.text = currentMedia.mediaName
+        binding.fragmentMovieDetailSubtitle.text = currentMedia.releaseYear.toString()
+        binding.fragmentMovieDetailSynopsis.text = currentMedia.synopsis
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.uiState.collect {
-                    genreAdapter.addData(it.currentGenreList.toMutableList())
-                    castAdapter.addData(it.currentCastList.toMutableList())
+                movieDetailViewModel.uiState.collect {
+                    genreAdapter.addData(it.genreList.toMutableList())
+                    castAdapter.addData(it.castList.toMutableList())
                 }
             }
         }

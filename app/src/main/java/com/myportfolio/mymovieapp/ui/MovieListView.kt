@@ -14,8 +14,14 @@ class MovieListView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
 
     private val adapter = MovieListAdapter()
 
-    fun bindList( title: String, mediaList: List<Media>, onTitleClicked: ((View) -> Unit), onMediaClicked: (Media) -> Unit ) {
-        findViewById<TextView>(R.id.category_title).text = "$title >"
+    fun bindList(
+        title: String,
+        mediaList: List<Media>,
+        onTitleClicked: ((View) -> Unit),
+        onMediaClicked: (Media) -> Unit
+    ) {
+        context.getString(R.string.movies)
+        findViewById<TextView>(R.id.category_title).text = context.getString(R.string.movie_list_view_title, title)
         findViewById<RecyclerView>(R.id.home_recycler_view).adapter = adapter
         adapter.addData(mediaList)
         adapter.setOnMediaClickListener(onMediaClicked)
