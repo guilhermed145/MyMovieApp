@@ -30,7 +30,7 @@ class HomeViewModel(private val repository: MovieRepository): ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
+    fun loadMedia() {
         getPopularMovies()
         getTopRatedMovies()
         getUpcomingMovies()
