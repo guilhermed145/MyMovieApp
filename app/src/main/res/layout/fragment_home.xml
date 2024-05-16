@@ -15,12 +15,13 @@
             android:id="@+id/discover_movies"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Discover Movies"
+            android:paddingTop="28dp"
+            android:paddingBottom="16dp"
+            android:paddingHorizontal="16dp"
+            android:text="@string/discover_movies"
             style="@style/Widget.MyMovieApp.HomeTitleTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <include
             layout="@layout/movie_list"
@@ -49,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="Discover TV Series"
+            android:text="@string/discover_tv_series"
             style="@style/Widget.MyMovieApp.HomeTitleTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/movie_list3"
@@ -60,6 +61,7 @@
             android:id="@+id/series_list1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/series_title" />
 
         <include
@@ -68,13 +70,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/series_list1" />
-
-        <include
-            layout="@layout/movie_list"
-            android:id="@+id/series_list3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/series_list2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
