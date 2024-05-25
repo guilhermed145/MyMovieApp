@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.myportfolio.mymovieapp.App
+import com.myportfolio.mymovieapp.Application
 import com.myportfolio.mymovieapp.data.MovieRepository
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.util.Constants
@@ -69,7 +69,7 @@ class CategoryViewModel(private val repository: MovieRepository): ViewModel () {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-                        as App)
+                        as Application)
                 val appRepository = application.container.appRepository
                 CategoryViewModel(repository = appRepository)
             }
