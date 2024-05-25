@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentMovieDetailBinding
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.ui.adapters.MovieCastListAdapter
@@ -49,6 +52,15 @@ class MovieDetailFragment : Fragment() {
         binding.fragmentMovieDetailGenreList.adapter = genreAdapter
         binding.fragmentMovieDetailCastList.adapter = castAdapter
         loadMovieData()
+        binding.fragmentMovieDetailFavoriteFab.setOnClickListener {
+            if (movieDetailViewModel.isMediaInFavorites(currentMedia)) {
+                binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite_border)
+                Toast.makeText(context, "Removed from favorites!", Toast.LENGTH_SHORT).show()
+            } else{
+                binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite)
+                Toast.makeText(context, "Added to favorites!", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroyView() {

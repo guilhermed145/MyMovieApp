@@ -43,17 +43,18 @@ class MovieDetailViewModel(private val repository: MovieRepository): ViewModel (
         viewModelScope.launch {
             try {
                 val apiData = repository.getGenreList(media.mediaType)
-                val genreList: MutableList<String> = mutableListOf()
+                val genreNameList: MutableList<String> = mutableListOf()
                 for (genreId in media.genreIdList) {
                     for (genre in apiData) {
                         if (genreId == genre.id) {
-                            genreList.add(genre.name)
+                            genreNameList.add(genre.name)
                         }
                     }
                 }
+                media.genreNameList = genreNameList
                 _uiState.update {
                     it.copy(
-                        genreList = genreList
+                        genreList = genreNameList
                     )
                 }
             } catch (e: IOException) {
@@ -78,6 +79,7 @@ class MovieDetailViewModel(private val repository: MovieRepository): ViewModel (
         viewModelScope.launch {
             try {
                 val apiData = repository.getCastList(media.mediaType, media.id)
+                media.castList = apiData
                 _uiState.update {
                     it.copy(
                         castList = apiData
@@ -97,6 +99,20 @@ class MovieDetailViewModel(private val repository: MovieRepository): ViewModel (
                         castList = listOf()
                     )
                 }
+            }
+        }
+    }
+
+    fun isMediaInFavorites(currentMedia: Media): Boolean {
+        return false
+    }
+
+    fun addMediaToFavorites(currentMedia: Media) {
+        viewModelScope.launch {
+            try {
+                repository.addToFavorites(currentMedia)
+            } catch (e: IOException) {
+                Log.e("IO EXCEPTION", "getCurrentCastList()", e)
             }
         }
     }

@@ -18,6 +18,12 @@ interface MovieRepository {
     suspend fun getSeries(categoryId: String, page: Int): List<Media>
     suspend fun getCastList(categoryId: String, mediaId: Int): List<CastMember>
     suspend fun getGenreList(mediaType: String): List<MediaGenre>
+
+    fun getFavorites(): List<Media>
+
+    suspend fun addToFavorites(media: Media)
+
+    suspend fun removeFromFavorites(media: Media)
 }
 
 class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : MovieRepository {
@@ -29,6 +35,8 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
 
     override suspend fun getMovies(categoryId: String, page: Int): List<Media> {
         return moviesApiService.getMovies(categoryId, apiKey, page).results.map {
+//            val movieCastList = getCastList(categoryId, it.id)
+//            val movieGenreList = getGenreList(Constants.movieTypeId).getGenreNames(it.genre_ids)
             it.toMedia()
         }
     }
@@ -49,6 +57,19 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
         return moviesApiService.getGenreList(mediaType, apiKey).genres.map {
             it.toMediaGenre()
         }
+    }
+
+    override fun getFavorites(): List<Media> {
+        return listOf()
+//        return database.getMovieDAO().getAllMedia()
+    }
+
+    override suspend fun addToFavorites(media: Media) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun removeFromFavorites(media: Media) {
+        TODO("Not yet implemented")
     }
 
     private fun MovieResultDTO.toMedia(): Media =
@@ -81,16 +102,17 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
         return releaseDate.take(4).toInt()
     }
 
+    private fun GenreDTO.toMediaGenre() =
+        MediaGenre(
+            id = id,
+            name = name
+        )
+
     private fun CastDTO.toCastMember(): CastMember =
         CastMember(
             actorImage = mediaSmallPosterBaseUrl + profile_path,
             actorName = name,
             characterName = character,
-        )
-    private fun GenreDTO.toMediaGenre() =
-        MediaGenre(
-            id = id,
-            name = name
         )
 
 }

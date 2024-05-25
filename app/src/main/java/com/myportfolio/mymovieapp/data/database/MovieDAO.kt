@@ -17,6 +17,6 @@ interface MovieDAO {
     suspend fun removeMedia(media: Media)
 
     @Query("SELECT * FROM medias")
-    suspend fun selectAllMedia(): List<Media>
+    fun getAllMedia(): List<Media>
 
 }

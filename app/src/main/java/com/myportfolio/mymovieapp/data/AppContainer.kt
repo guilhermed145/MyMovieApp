@@ -1,7 +1,9 @@
 package com.myportfolio.mymovieapp.data
 
+import com.myportfolio.mymovieapp.data.database.MovieDatabase
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 interface Container {
     val appRepository: MovieRepository
