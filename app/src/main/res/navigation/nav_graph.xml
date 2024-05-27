@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.myportfolio.mymovieapp.ui.FavoritesFragment"
-        android:label="FavoritesFragment" >
+        android:label="Favorites" >
         <action
             android:id="@+id/action_favoritesFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
