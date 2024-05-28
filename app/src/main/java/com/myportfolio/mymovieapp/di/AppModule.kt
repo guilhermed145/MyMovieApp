@@ -13,17 +13,20 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    private const val baseUrl = "https://api.themoviedb.org/3/"
 
     @Provides
     @Singleton
     fun providesApiService(): MoviesApiService {
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MoviesApiService::class.java)
     }
@@ -46,8 +49,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesMovieRepository(moviesApiService: MoviesApiService, movieDatabase: MovieDatabase): MovieRepository {
-        return MovieRepositoryImpl(moviesApiService, movieDatabase)
+    fun providesMovieRepository(moviesApiService: MoviesApiService, movieDAO: MovieDAO): MovieRepository {
+        return MovieRepositoryImpl(moviesApiService, movieDAO)
     }
 
 }
