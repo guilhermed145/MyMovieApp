@@ -10,6 +10,7 @@ import java.io.Serializable
 @Entity(tableName = "medias")
 data class Media(
     @PrimaryKey
+    @ColumnInfo(name = "media_id")
     var id: Int = 0,
     @ColumnInfo(name = "media_name")
     var mediaName: String = "",
@@ -22,14 +23,14 @@ data class Media(
     @ColumnInfo(name = "release_year")
     var releaseYear: Int = 0,
     var synopsis: String = "",
+    @ColumnInfo(name = "media_type")
+    var mediaType: String = Constants.movieTypeId,
     @Ignore
     var genreIdList: List<Int> = listOf(),
-    //@ColumnInfo(name = "genre_list")
+    @Ignore
+    var genreList: List<MediaGenre> = listOf(),
     @Ignore
     var genreNameList: List<String> = listOf(),
-    //@ColumnInfo(name = "cast_list")
     @Ignore
     var castList: List<CastMember> = listOf(),
-    @ColumnInfo(name = "media_type")
-    var mediaType: String = Constants.movieTypeId
 ) : Serializable
