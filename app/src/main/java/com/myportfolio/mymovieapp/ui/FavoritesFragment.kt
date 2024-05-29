@@ -27,7 +27,6 @@ class FavoritesFragment : Fragment() {
 
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
-//    private val favoritesViewModel: FavoritesViewModel by viewModels(factoryProducer = { FavoritesViewModel.Factory})
     private val favoritesViewModel: FavoritesViewModel by viewModels()
 
     private val adapter = MovieListAdapter()
@@ -74,6 +73,11 @@ class FavoritesFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        favoritesViewModel.getFavoriteMedias()
     }
 
     override fun onDestroyView() {
