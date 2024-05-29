@@ -1,6 +1,7 @@
 package com.myportfolio.mymovieapp.ui.viewmodels
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myportfolio.mymovieapp.data.MovieRepository
@@ -18,6 +19,7 @@ import javax.inject.Inject
 data class MovieDetailUiState (
     var castList: List<CastMember> = listOf(),
     var genreList: List<String> = listOf(),
+    var isInFavorites: Boolean = false
 )
 
 @HiltViewModel
@@ -104,32 +106,57 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    fun isMediaInFavorites(currentMedia: Media): Boolean {
-        return false
+    fun checkIfMediaIsInFavorites(currentMedia: Media) {
+        viewModelScope.launch {
+            try {
+                var isInFavorites = false
+                if (repository.isMediaInFavorites(currentMedia.id) == 1) {
+                    isInFavorites = true
+                }
+                _uiState.update {
+                    it.copy(
+                        isInFavorites = isInFavorites
+                    )
+                }
+            } catch (e: IOException) {
+                Log.e("IO EXCEPTION", "checkIfMediaIsInFavorites()", e)
+                _uiState.update {
+                    it.copy(
+                        isInFavorites = false
+                    )
+                }
+            }
+        }
     }
 
     fun addMediaToFavorites(currentMedia: Media) {
         viewModelScope.launch {
             try {
                 repository.addToFavorites(currentMedia)
+                _uiState.update {
+                    it.copy(
+                        isInFavorites = true
+                    )
+                }
             } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getCurrentCastList()", e)
+                Log.e("IO EXCEPTION", "addMediaToFavorites()", e)
             }
         }
     }
 
-    /**
-     * Factory for the viewModel that takes the repository as a dependency.
-     */
-//    companion object {
-//        val Factory: ViewModelProvider.Factory = viewModelFactory {
-//            initializer {
-//                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-//                        as Application)
-//                val appRepository = application.container.appRepository
-//                MovieDetailViewModel(repository = appRepository)
-//            }
-//        }
-//    }
+    fun removeMediaFromFavorites(currentMedia: Media) {
+        viewModelScope.launch {
+            try {
+                repository.removeFromFavorites(currentMedia)
+                _uiState.update {
+                    it.copy(
+                        isInFavorites = false
+                    )
+                }
+            } catch (e: IOException) {
+                Log.e("IO EXCEPTION", "removeMediaFromFavorites()", e)
+            }
+        }
+    }
 
 }

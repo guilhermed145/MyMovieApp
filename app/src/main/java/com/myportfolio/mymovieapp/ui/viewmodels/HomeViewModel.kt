@@ -174,18 +174,4 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Factory for the viewModel that takes the repository as a dependency.
-     */
-//    companion object {
-//        val Factory: ViewModelProvider.Factory = viewModelFactory {
-//            initializer {
-//                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-//                        as Application)
-//                val appRepository = application.container.appRepository
-//                HomeViewModel(repository = appRepository)
-//            }
-//        }
-//    }
-
 }

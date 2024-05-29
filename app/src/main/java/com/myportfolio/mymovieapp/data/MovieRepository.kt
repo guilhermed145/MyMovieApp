@@ -20,7 +20,11 @@ interface MovieRepository {
     suspend fun getCastList(categoryId: String, mediaId: Int): List<CastMember>
     suspend fun getGenreList(mediaType: String): List<MediaGenre>
 
-    fun getFavorites(): List<Media>
+    suspend fun getFavorites(): List<Media>
+
+    suspend fun getFavoriteMedia(mediaId: Int): Media
+
+    suspend fun isMediaInFavorites(mediaId: Int): Int
 
     suspend fun addToFavorites(media: Media)
 
@@ -63,17 +67,24 @@ class MovieRepositoryImpl(
         }
     }
 
-    override fun getFavorites(): List<Media> {
-        return listOf()
-//        return movieDAO.getAllMedia()
+    override suspend fun getFavorites(): List<Media> {
+        return movieDAO.getAllMedia()
+    }
+
+    override suspend fun getFavoriteMedia(mediaId: Int): Media {
+        return movieDAO.getMedia(mediaId)
+    }
+
+    override suspend fun isMediaInFavorites(mediaId: Int): Int {
+        return movieDAO.isMediaInFavorites(mediaId)
     }
 
     override suspend fun addToFavorites(media: Media) {
-        TODO("Not yet implemented")
+        movieDAO.insertMedia(media)
     }
 
     override suspend fun removeFromFavorites(media: Media) {
-        TODO("Not yet implemented")
+        movieDAO.removeMedia(media)
     }
 
     private fun MovieResultDTO.toMedia(): Media =

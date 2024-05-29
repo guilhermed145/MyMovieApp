@@ -42,6 +42,8 @@ class MovieDetailFragment : Fragment() {
             arguments?.getSerializable("currentMedia") as Media
         movieDetailViewModel.getGenreList(currentMedia)
         movieDetailViewModel.getCastList(currentMedia)
+        movieDetailViewModel.checkIfMediaIsInFavorites(currentMedia)
+
         // Inflate the layout for this fragment
         val fragmentBinding = FragmentMovieDetailBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
@@ -53,15 +55,7 @@ class MovieDetailFragment : Fragment() {
         binding.fragmentMovieDetailGenreList.adapter = genreAdapter
         binding.fragmentMovieDetailCastList.adapter = castAdapter
         loadMovieData()
-        binding.fragmentMovieDetailFavoriteFab.setOnClickListener {
-            if (movieDetailViewModel.isMediaInFavorites(currentMedia)) {
-                binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite_border)
-                Toast.makeText(context, "Removed from favorites!", Toast.LENGTH_SHORT).show()
-            } else{
-                binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite)
-                Toast.makeText(context, "Added to favorites!", Toast.LENGTH_SHORT).show()
-            }
-        }
+        loadAddToFavoritesButton()
     }
 
     override fun onDestroyView() {
@@ -91,6 +85,34 @@ class MovieDetailFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun loadAddToFavoritesButton() {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                movieDetailViewModel.uiState.collect {
+                    if (movieDetailViewModel.uiState.value.isInFavorites) {
+                        binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite)
+                    } else {
+                        binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite_border)
+                    }
+                }
+            }
+        }
+
+        binding.fragmentMovieDetailFavoriteFab.setOnClickListener {
+            if (movieDetailViewModel.uiState.value.isInFavorites) {
+                movieDetailViewModel.removeMediaFromFavorites(currentMedia)
+//                binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite_border)
+                Toast.makeText(context, "Removed from favorites!", Toast.LENGTH_SHORT).show()
+            } else{
+                movieDetailViewModel.addMediaToFavorites(currentMedia)
+//                binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite)
+                Toast.makeText(context, "Added to favorites!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
 }
