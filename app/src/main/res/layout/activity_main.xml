@@ -12,13 +12,16 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         >
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/toolbar_favorites_button"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="20dp"
-                />
+
+        <ImageButton
+            android:id="@+id/toolbar_favorites_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_favorite"
+            android:background="@null"
+            app:tint="@color/dark_grey" />
 
     </androidx.appcompat.widget.Toolbar>
 

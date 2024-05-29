@@ -16,16 +16,18 @@ import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.ui.adapters.MovieListAdapter
 import com.myportfolio.mymovieapp.ui.viewmodels.CategoryViewModel
 import com.myportfolio.mymovieapp.util.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
  */
+@AndroidEntryPoint
 class CategoryFragment : Fragment() {
 
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
-    private val categoryViewModel: CategoryViewModel by viewModels(factoryProducer = {CategoryViewModel.Factory})
+    private val categoryViewModel: CategoryViewModel by viewModels()
 
     private val adapter = MovieListAdapter()
 

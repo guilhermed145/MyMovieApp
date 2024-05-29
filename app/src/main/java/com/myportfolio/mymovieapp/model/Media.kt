@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import com.myportfolio.mymovieapp.util.Constants
 import java.io.Serializable
 
@@ -25,10 +24,11 @@ data class Media(
     var synopsis: String = "",
     @Ignore
     var genreIdList: List<Int> = listOf(),
-    @ColumnInfo(name = "genre_list")
+    //@ColumnInfo(name = "genre_list")
+    @Ignore
     var genreNameList: List<String> = listOf(),
-    @ColumnInfo(name = "cast_list")
-    @Relation(parentColumn = "id", entityColumn = "media_id")
+    //@ColumnInfo(name = "cast_list")
+    @Ignore
     var castList: List<CastMember> = listOf(),
     @ColumnInfo(name = "media_type")
     var mediaType: String = Constants.movieTypeId

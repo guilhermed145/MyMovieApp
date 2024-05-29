@@ -2,27 +2,28 @@ package com.myportfolio.mymovieapp.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.myportfolio.mymovieapp.Application
 import com.myportfolio.mymovieapp.data.MovieRepository
 import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 data class MovieDetailUiState (
     var castList: List<CastMember> = listOf(),
     var genreList: List<String> = listOf(),
 )
 
-class MovieDetailViewModel(private val repository: MovieRepository): ViewModel () {
+@HiltViewModel
+class MovieDetailViewModel @Inject constructor(
+    private val repository: MovieRepository
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(MovieDetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -120,15 +121,15 @@ class MovieDetailViewModel(private val repository: MovieRepository): ViewModel (
     /**
      * Factory for the viewModel that takes the repository as a dependency.
      */
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-                        as Application)
-                val appRepository = application.container.appRepository
-                MovieDetailViewModel(repository = appRepository)
-            }
-        }
-    }
+//    companion object {
+//        val Factory: ViewModelProvider.Factory = viewModelFactory {
+//            initializer {
+//                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
+//                        as Application)
+//                val appRepository = application.container.appRepository
+//                MovieDetailViewModel(repository = appRepository)
+//            }
+//        }
+//    }
 
 }

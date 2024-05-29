@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -19,13 +18,15 @@ import com.myportfolio.mymovieapp.ui.adapters.MovieCastListAdapter
 import com.myportfolio.mymovieapp.ui.adapters.MovieGenreListAdapter
 import com.myportfolio.mymovieapp.ui.viewmodels.MovieDetailViewModel
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MovieDetailFragment : Fragment() {
 
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
-    private val movieDetailViewModel: MovieDetailViewModel by viewModels(factoryProducer = {MovieDetailViewModel.Factory})
+    private val movieDetailViewModel: MovieDetailViewModel by viewModels()
     private val genreAdapter = MovieGenreListAdapter()
     private val castAdapter = MovieCastListAdapter()
     private var currentMedia = Media()

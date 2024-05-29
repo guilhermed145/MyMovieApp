@@ -1,6 +1,7 @@
 package com.myportfolio.mymovieapp.data
 
 import com.myportfolio.mymovieapp.BuildConfig
+import com.myportfolio.mymovieapp.data.database.MovieDAO
 import com.myportfolio.mymovieapp.data.dto.CastDTO
 import com.myportfolio.mymovieapp.data.dto.GenreDTO
 import com.myportfolio.mymovieapp.data.dto.MovieResultDTO
@@ -26,7 +27,10 @@ interface MovieRepository {
     suspend fun removeFromFavorites(media: Media)
 }
 
-class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : MovieRepository {
+class MovieRepositoryImpl(
+    private val moviesApiService: MoviesApiService,
+    private val movieDAO: MovieDAO
+) : MovieRepository {
 
     private val mediaBigPosterBaseUrl = "https://image.tmdb.org/t/p/original/"
     private val mediaMediumPosterBaseUrl = "https://image.tmdb.org/t/p/w500/"
@@ -61,7 +65,7 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
 
     override fun getFavorites(): List<Media> {
         return listOf()
-//        return database.getMovieDAO().getAllMedia()
+//        return movieDAO.getAllMedia()
     }
 
     override suspend fun addToFavorites(media: Media) {
