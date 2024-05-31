@@ -4,31 +4,39 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentHomeBinding
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.ui.viewmodels.HomeViewModel
 import com.myportfolio.mymovieapp.util.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
  */
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by viewModels(factoryProducer = {HomeViewModel.Factory})
+    private val homeViewModel: HomeViewModel by viewModels()
+    private lateinit var favoritesButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeViewModel.loadMedia()
+
+        //actionBar = (activity as AppCompatActivity).supportActionBar!!
     }
 
     override fun onCreateView(
@@ -39,6 +47,12 @@ class HomeFragment : Fragment() {
         val fragmentBinding = FragmentHomeBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
 
+        favoritesButton = (activity as AppCompatActivity).findViewById(R.id.toolbar_favorites_button)
+        favoritesButton.visibility = View.VISIBLE
+        favoritesButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
+        }
+
         return fragmentBinding.root
     }
 
@@ -48,6 +62,8 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        favoritesButton.visibility = View.INVISIBLE
+        favoritesButton.setOnClickListener(null)
         super.onDestroyView()
         _binding = null
     }

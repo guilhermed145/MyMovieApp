@@ -1,28 +1,31 @@
 package com.myportfolio.mymovieapp.ui.viewmodels
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.myportfolio.mymovieapp.App
 import com.myportfolio.mymovieapp.data.MovieRepository
 import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 data class MovieDetailUiState (
     var castList: List<CastMember> = listOf(),
     var genreList: List<String> = listOf(),
+    var isInFavorites: Boolean = false
 )
 
-class MovieDetailViewModel(private val repository: MovieRepository): ViewModel () {
+@HiltViewModel
+class MovieDetailViewModel @Inject constructor(
+    private val repository: MovieRepository
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(MovieDetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -43,17 +46,18 @@ class MovieDetailViewModel(private val repository: MovieRepository): ViewModel (
         viewModelScope.launch {
             try {
                 val apiData = repository.getGenreList(media.mediaType)
-                val genreList: MutableList<String> = mutableListOf()
+                val genreNameList: MutableList<String> = mutableListOf()
                 for (genreId in media.genreIdList) {
                     for (genre in apiData) {
                         if (genreId == genre.id) {
-                            genreList.add(genre.name)
+                            genreNameList.add(genre.name)
                         }
                     }
                 }
+                media.genreNameList = genreNameList
                 _uiState.update {
                     it.copy(
-                        genreList = genreList
+                        genreList = genreNameList
                     )
                 }
             } catch (e: IOException) {
@@ -78,6 +82,7 @@ class MovieDetailViewModel(private val repository: MovieRepository): ViewModel (
         viewModelScope.launch {
             try {
                 val apiData = repository.getCastList(media.mediaType, media.id)
+                media.castList = apiData
                 _uiState.update {
                     it.copy(
                         castList = apiData
@@ -101,16 +106,55 @@ class MovieDetailViewModel(private val repository: MovieRepository): ViewModel (
         }
     }
 
-    /**
-     * Factory for the viewModel that takes the repository as a dependency.
-     */
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-                        as App)
-                val appRepository = application.container.appRepository
-                MovieDetailViewModel(repository = appRepository)
+    fun checkIfMediaIsInFavorites(currentMedia: Media) {
+        viewModelScope.launch {
+            try {
+                var isInFavorites = false
+                if (repository.isMediaInFavorites(currentMedia.id) == 1) {
+                    isInFavorites = true
+                }
+                _uiState.update {
+                    it.copy(
+                        isInFavorites = isInFavorites
+                    )
+                }
+            } catch (e: IOException) {
+                Log.e("IO EXCEPTION", "checkIfMediaIsInFavorites()", e)
+                _uiState.update {
+                    it.copy(
+                        isInFavorites = false
+                    )
+                }
+            }
+        }
+    }
+
+    fun addMediaToFavorites(currentMedia: Media) {
+        viewModelScope.launch {
+            try {
+                repository.addToFavorites(currentMedia)
+                _uiState.update {
+                    it.copy(
+                        isInFavorites = true
+                    )
+                }
+            } catch (e: IOException) {
+                Log.e("IO EXCEPTION", "addMediaToFavorites()", e)
+            }
+        }
+    }
+
+    fun removeMediaFromFavorites(currentMedia: Media) {
+        viewModelScope.launch {
+            try {
+                repository.removeFromFavorites(currentMedia)
+                _uiState.update {
+                    it.copy(
+                        isInFavorites = false
+                    )
+                }
+            } catch (e: IOException) {
+                Log.e("IO EXCEPTION", "removeMediaFromFavorites()", e)
             }
         }
     }

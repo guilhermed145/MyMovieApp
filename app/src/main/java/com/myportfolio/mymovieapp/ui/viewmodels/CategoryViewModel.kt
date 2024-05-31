@@ -2,26 +2,27 @@ package com.myportfolio.mymovieapp.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.myportfolio.mymovieapp.App
 import com.myportfolio.mymovieapp.data.MovieRepository
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.util.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 data class CategoryUiState (
     val currentMediaList: List<Media> = listOf(),
 )
 
-class CategoryViewModel(private val repository: MovieRepository): ViewModel () {
+@HiltViewModel
+class CategoryViewModel @Inject constructor(
+    private val repository: MovieRepository
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(CategoryUiState())
     val uiState = _uiState.asStateFlow()
@@ -58,20 +59,6 @@ class CategoryViewModel(private val repository: MovieRepository): ViewModel () {
                         currentMediaList = listOf()
                     )
                 }
-            }
-        }
-    }
-
-    /**
-     * Factory for the viewModel that takes the repository as a dependency.
-     */
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-                        as App)
-                val appRepository = application.container.appRepository
-                CategoryViewModel(repository = appRepository)
             }
         }
     }

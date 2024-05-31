@@ -1,6 +1,7 @@
 package com.myportfolio.mymovieapp.data
 
 import com.myportfolio.mymovieapp.BuildConfig
+import com.myportfolio.mymovieapp.data.database.MovieDAO
 import com.myportfolio.mymovieapp.data.dto.CastDTO
 import com.myportfolio.mymovieapp.data.dto.GenreDTO
 import com.myportfolio.mymovieapp.data.dto.MovieResultDTO
@@ -18,9 +19,22 @@ interface MovieRepository {
     suspend fun getSeries(categoryId: String, page: Int): List<Media>
     suspend fun getCastList(categoryId: String, mediaId: Int): List<CastMember>
     suspend fun getGenreList(mediaType: String): List<MediaGenre>
+
+    suspend fun getFavorites(): List<Media>
+
+    suspend fun getFavoriteMedia(mediaId: Int): Media
+
+    suspend fun isMediaInFavorites(mediaId: Int): Int
+
+    suspend fun addToFavorites(media: Media)
+
+    suspend fun removeFromFavorites(media: Media)
 }
 
-class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : MovieRepository {
+class MovieRepositoryImpl(
+    private val moviesApiService: MoviesApiService,
+    private val movieDAO: MovieDAO
+) : MovieRepository {
 
     private val mediaBigPosterBaseUrl = "https://image.tmdb.org/t/p/original/"
     private val mediaMediumPosterBaseUrl = "https://image.tmdb.org/t/p/w500/"
@@ -29,6 +43,8 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
 
     override suspend fun getMovies(categoryId: String, page: Int): List<Media> {
         return moviesApiService.getMovies(categoryId, apiKey, page).results.map {
+//            val movieCastList = getCastList(categoryId, it.id)
+//            val movieGenreList = getGenreList(Constants.movieTypeId).getGenreNames(it.genre_ids)
             it.toMedia()
         }
     }
@@ -49,6 +65,26 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
         return moviesApiService.getGenreList(mediaType, apiKey).genres.map {
             it.toMediaGenre()
         }
+    }
+
+    override suspend fun getFavorites(): List<Media> {
+        return movieDAO.getAllMedia()
+    }
+
+    override suspend fun getFavoriteMedia(mediaId: Int): Media {
+        return movieDAO.getMedia(mediaId)
+    }
+
+    override suspend fun isMediaInFavorites(mediaId: Int): Int {
+        return movieDAO.isMediaInFavorites(mediaId)
+    }
+
+    override suspend fun addToFavorites(media: Media) {
+        movieDAO.insertMedia(media)
+    }
+
+    override suspend fun removeFromFavorites(media: Media) {
+        movieDAO.removeMedia(media)
     }
 
     private fun MovieResultDTO.toMedia(): Media =
@@ -81,16 +117,17 @@ class MovieRepositoryImpl(private val moviesApiService: MoviesApiService) : Movi
         return releaseDate.take(4).toInt()
     }
 
+    private fun GenreDTO.toMediaGenre() =
+        MediaGenre(
+            id = id,
+            name = name
+        )
+
     private fun CastDTO.toCastMember(): CastMember =
         CastMember(
             actorImage = mediaSmallPosterBaseUrl + profile_path,
             actorName = name,
             characterName = character,
-        )
-    private fun GenreDTO.toMediaGenre() =
-        MediaGenre(
-            id = id,
-            name = name
         )
 
 }

@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_homeFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
@@ -32,4 +35,12 @@
         android:name="com.myportfolio.mymovieapp.ui.MovieDetailFragment"
         android:label=""
         tools:layout="@layout/fragment_movie_detail" />
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.myportfolio.mymovieapp.ui.FavoritesFragment"
+        android:label="" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
 </navigation>
