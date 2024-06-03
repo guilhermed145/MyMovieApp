@@ -2,6 +2,9 @@ package com.myportfolio.mymovieapp.data
 
 import com.myportfolio.mymovieapp.BuildConfig
 import com.myportfolio.mymovieapp.data.database.MovieDAO
+import com.myportfolio.mymovieapp.data.database.entities.MediaMediaGenreCrossRef
+import com.myportfolio.mymovieapp.data.database.relations.MediaWithCastMembers
+import com.myportfolio.mymovieapp.data.database.relations.MediaWithMediaGenres
 import com.myportfolio.mymovieapp.data.dto.CastDTO
 import com.myportfolio.mymovieapp.data.dto.GenreDTO
 import com.myportfolio.mymovieapp.data.dto.MovieResultDTO
@@ -10,6 +13,7 @@ import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.model.MediaGenre
 import com.myportfolio.mymovieapp.util.Constants
+import java.lang.Exception
 
 /**
  * The Repository object for the movies data.
@@ -17,12 +21,11 @@ import com.myportfolio.mymovieapp.util.Constants
 interface MovieRepository {
     suspend fun getMovies(categoryId: String, page: Int): List<Media>
     suspend fun getSeries(categoryId: String, page: Int): List<Media>
-    suspend fun getCastList(categoryId: String, mediaId: Int): List<CastMember>
-    suspend fun getGenreList(mediaType: String): List<MediaGenre>
+    suspend fun getCastList(media: Media): List<CastMember>
+    suspend fun getMediaGenreList(media: Media): List<MediaGenre>
+    suspend fun getMediaTypeGenreList(mediaType: String): List<MediaGenre>
 
     suspend fun getFavorites(): List<Media>
-
-    suspend fun getFavoriteMedia(mediaId: Int): Media
 
     suspend fun isMediaInFavorites(mediaId: Int): Int
 
@@ -43,8 +46,6 @@ class MovieRepositoryImpl(
 
     override suspend fun getMovies(categoryId: String, page: Int): List<Media> {
         return moviesApiService.getMovies(categoryId, apiKey, page).results.map {
-//            val movieCastList = getCastList(categoryId, it.id)
-//            val movieGenreList = getGenreList(Constants.movieTypeId).getGenreNames(it.genre_ids)
             it.toMedia()
         }
     }
@@ -55,24 +56,58 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getCastList(categoryId: String, mediaId: Int): List<CastMember> {
-        return moviesApiService.getCastList(categoryId, mediaId.toString(), apiKey).cast.map {
-            it.toCastMember()
+    override suspend fun getCastList(media: Media): List<CastMember> {
+        var castList: List<CastMember> = listOf()
+        castList = try {
+            val apiResult = moviesApiService.getCastList(
+                media.mediaType, media.id.toString(), apiKey
+            ).cast.map {
+                it.toCastMember(media.id)
+            }
+            apiResult
+        } catch (e: Exception) {
+            movieDAO.getMediaWithCastMembers(media.id).toCastList()
         }
+
+        return castList
     }
 
-    override suspend fun getGenreList(mediaType: String): List<MediaGenre> {
+    override suspend fun getMediaGenreList(media: Media): List<MediaGenre> {
+        var genreList: MutableList<MediaGenre> = mutableListOf()
+        try {
+            val apiResult = getMediaTypeGenreList(media.mediaType)
+            if (media.genreIdList.isEmpty()) {
+                media.genreIdList = movieDAO.getMediaGenresOfMedia(media.id).toGenreList().map {
+                    it.id
+                }
+            }
+            for (genreId in media.genreIdList) {
+                for (genre in apiResult) {
+                    if (genreId == genre.id) {
+                        genreList.add(genre)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            genreList = movieDAO.getMediaGenresOfMedia(media.id).toGenreList().toMutableList()
+        }
+
+        return genreList
+    }
+
+    override suspend fun getMediaTypeGenreList(mediaType: String): List<MediaGenre> {
         return moviesApiService.getGenreList(mediaType, apiKey).genres.map {
             it.toMediaGenre()
         }
     }
 
     override suspend fun getFavorites(): List<Media> {
-        return movieDAO.getAllMedia()
-    }
-
-    override suspend fun getFavoriteMedia(mediaId: Int): Media {
-        return movieDAO.getMedia(mediaId)
+        val allFavorites = movieDAO.getAllMedia()
+        allFavorites.forEach {
+            it.genreList = movieDAO.getMediaGenresOfMedia(it.id).toGenreList()
+            it.castList = movieDAO.getMediaWithCastMembers(it.id).toCastList()
+        }
+        return allFavorites
     }
 
     override suspend fun isMediaInFavorites(mediaId: Int): Int {
@@ -81,6 +116,13 @@ class MovieRepositoryImpl(
 
     override suspend fun addToFavorites(media: Media) {
         movieDAO.insertMedia(media)
+        media.genreList.forEach {
+            movieDAO.insertMediaGenre(it)
+            movieDAO.insertMediaMediaGenreCrossRef(MediaMediaGenreCrossRef(mediaId = media.id, it.name))
+        }
+        media.castList.forEach {
+            movieDAO.insertCastMember(it)
+        }
     }
 
     override suspend fun removeFromFavorites(media: Media) {
@@ -98,6 +140,7 @@ class MovieRepositoryImpl(
             synopsis = overview,
             genreIdList = genre_ids,
             mediaType = Constants.movieTypeId
+
         )
 
     private fun SerieResultDTO.toMedia(): Media =
@@ -123,12 +166,28 @@ class MovieRepositoryImpl(
             name = name
         )
 
-    private fun CastDTO.toCastMember(): CastMember =
+    private fun CastDTO.toCastMember(mediaId: Int): CastMember =
         CastMember(
             actorImage = mediaSmallPosterBaseUrl + profile_path,
             actorName = name,
             characterName = character,
+            mediaId = mediaId
         )
 
 }
 
+private fun List<MediaWithCastMembers>.toCastList(): List<CastMember> {
+    val mediaWithCastMembers: MediaWithCastMembers = this.firstOrNull() ?: MediaWithCastMembers(
+        Media(),
+        listOf()
+    )
+    return mediaWithCastMembers.castMembers
+}
+
+private fun List<MediaWithMediaGenres>.toGenreList(): List<MediaGenre> {
+    val mediaWithMediaGenres: MediaWithMediaGenres = this.firstOrNull() ?: MediaWithMediaGenres(
+        Media(),
+        listOf()
+    )
+    return mediaWithMediaGenres.genres
+}

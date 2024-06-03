@@ -30,7 +30,5 @@ data class Media(
     @Ignore
     var genreList: List<MediaGenre> = listOf(),
     @Ignore
-    var genreNameList: List<String> = listOf(),
-    @Ignore
     var castList: List<CastMember> = listOf(),
 ) : Serializable
