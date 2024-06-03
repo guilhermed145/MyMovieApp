@@ -45,15 +45,8 @@ class CategoryViewModel @Inject constructor(
                         currentMediaList = mediaList
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getCategoryList()", e)
-                _uiState.update {
-                    it.copy(
-                        currentMediaList = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getCategoryList()", e)
+            } catch (e: Exception) {
+                Log.e("getCategoryList()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         currentMediaList = listOf()

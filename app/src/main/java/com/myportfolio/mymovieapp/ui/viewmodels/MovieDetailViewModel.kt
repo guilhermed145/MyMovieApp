@@ -1,12 +1,12 @@
 package com.myportfolio.mymovieapp.ui.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myportfolio.mymovieapp.data.MovieRepository
 import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
+import com.myportfolio.mymovieapp.model.MediaGenre
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 data class MovieDetailUiState (
     var castList: List<CastMember> = listOf(),
-    var genreList: List<String> = listOf(),
+    var genreList: List<MediaGenre> = listOf(),
     var isInFavorites: Boolean = false
 )
 
@@ -30,7 +30,7 @@ class MovieDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MovieDetailUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun setCurrentGenreList(newGenreList: List<String>) {
+    fun setCurrentGenreList(newGenreList: List<MediaGenre>) {
         _uiState.update {
             it.copy(genreList = newGenreList)
         }
@@ -45,30 +45,14 @@ class MovieDetailViewModel @Inject constructor(
     fun getGenreList(media: Media) {
         viewModelScope.launch {
             try {
-                val apiData = repository.getGenreList(media.mediaType)
-                val genreNameList: MutableList<String> = mutableListOf()
-                for (genreId in media.genreIdList) {
-                    for (genre in apiData) {
-                        if (genreId == genre.id) {
-                            genreNameList.add(genre.name)
-                        }
-                    }
-                }
-                media.genreNameList = genreNameList
+                val apiData = repository.getMediaGenreList(media)
                 _uiState.update {
                     it.copy(
-                        genreList = genreNameList
+                        genreList = apiData
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getCurrentGenreList()", e)
-                _uiState.update {
-                    it.copy(
-                        genreList = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getCurrentGenreList()", e)
+            } catch (e: Exception) {
+                Log.e("getGenreList()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         genreList = listOf()
@@ -81,22 +65,14 @@ class MovieDetailViewModel @Inject constructor(
     fun getCastList(media: Media) {
         viewModelScope.launch {
             try {
-                val apiData = repository.getCastList(media.mediaType, media.id)
-                media.castList = apiData
+                val apiData = repository.getCastList(media)
                 _uiState.update {
                     it.copy(
                         castList = apiData
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getCurrentCastList()", e)
-                _uiState.update {
-                    it.copy(
-                        castList = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getCurrentCastList()", e)
+            } catch (e: Exception) {
+                Log.e("getCastList()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         castList = listOf()
@@ -118,8 +94,8 @@ class MovieDetailViewModel @Inject constructor(
                         isInFavorites = isInFavorites
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "checkIfMediaIsInFavorites()", e)
+            } catch (e: Exception) {
+                Log.e("checkIfMediaIsInFavorites()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         isInFavorites = false
@@ -130,6 +106,8 @@ class MovieDetailViewModel @Inject constructor(
     }
 
     fun addMediaToFavorites(currentMedia: Media) {
+        currentMedia.genreList = uiState.value.genreList
+        currentMedia.castList = uiState.value.castList
         viewModelScope.launch {
             try {
                 repository.addToFavorites(currentMedia)
@@ -138,8 +116,8 @@ class MovieDetailViewModel @Inject constructor(
                         isInFavorites = true
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "addMediaToFavorites()", e)
+            } catch (e: Exception) {
+                Log.e("addMediaToFavorites()", e.stackTraceToString())
             }
         }
     }
@@ -153,8 +131,8 @@ class MovieDetailViewModel @Inject constructor(
                         isInFavorites = false
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "removeMediaFromFavorites()", e)
+            } catch (e: Exception) {
+                Log.e("removeMediaFromFavorites()", e.stackTraceToString())
             }
         }
     }
