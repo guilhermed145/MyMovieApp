@@ -31,11 +31,6 @@ class FavoritesFragment : Fragment() {
 
     private val adapter = MovieListAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        favoritesViewModel.getFavoriteMedias()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,7 +57,6 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun loadFavoriteMedias() {
-
         binding.categoryFragmentTitle.text = getString(R.string.favorites_fragment_title)
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -72,7 +66,6 @@ class FavoritesFragment : Fragment() {
                 }
             }
         }
-
     }
 
     override fun onResume() {

@@ -80,7 +80,9 @@ class MovieDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 movieDetailViewModel.uiState.collect {
-                    genreAdapter.addData(it.genreList.toMutableList())
+                    genreAdapter.addData(it.genreList.map { genre ->
+                        genre.name
+                    }.toMutableList())
                     castAdapter.addData(it.castList.toMutableList())
                 }
             }
@@ -104,11 +106,9 @@ class MovieDetailFragment : Fragment() {
         binding.fragmentMovieDetailFavoriteFab.setOnClickListener {
             if (movieDetailViewModel.uiState.value.isInFavorites) {
                 movieDetailViewModel.removeMediaFromFavorites(currentMedia)
-//                binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite_border)
                 Toast.makeText(context, "Removed from favorites!", Toast.LENGTH_SHORT).show()
-            } else{
+            } else {
                 movieDetailViewModel.addMediaToFavorites(currentMedia)
-//                binding.fragmentMovieDetailFavoriteFab.setImageResource(R.drawable.ic_favorite)
                 Toast.makeText(context, "Added to favorites!", Toast.LENGTH_SHORT).show()
             }
         }
