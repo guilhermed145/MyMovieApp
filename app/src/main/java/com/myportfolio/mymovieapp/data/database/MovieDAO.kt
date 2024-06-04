@@ -51,6 +51,6 @@ interface MovieDAO {
 
     @Transaction
     @Query("SELECT * FROM medias WHERE media_id = :mediaId")
-    suspend fun getMediaGenresOfMedia(mediaId: String): List<MediaWithMediaGenres>
+    suspend fun getMediaGenresOfMedia(mediaId: Int): List<MediaWithMediaGenres>
 
 }

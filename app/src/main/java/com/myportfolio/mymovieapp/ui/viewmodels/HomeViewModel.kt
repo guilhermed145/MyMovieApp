@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun loadMedia() {
+    init {
         getPopularMovies()
         getTopRatedMovies()
         getUpcomingMovies()
@@ -48,15 +48,8 @@ class HomeViewModel @Inject constructor(
                         popularMovies = apiData
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getPopularMovies()", e)
-                _uiState.update {
-                    it.copy(
-                        popularMovies = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getPopularMovies()", e)
+            } catch (e: Exception) {
+                Log.e("getPopularMovies()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         popularMovies = listOf()
@@ -75,15 +68,8 @@ class HomeViewModel @Inject constructor(
                         topRatedMovies = apiData
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getTopRatedMovies()", e)
-                _uiState.update {
-                    it.copy(
-                        topRatedMovies = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getTopRatedMovies()", e)
+            } catch (e: Exception) {
+                Log.e( "getTopRatedMovies()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         topRatedMovies = listOf()
@@ -102,15 +88,8 @@ class HomeViewModel @Inject constructor(
                         upcomingMovies = apiData
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getUpcomingMovies()", e)
-                _uiState.update {
-                    it.copy(
-                        upcomingMovies = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getUpcomingMovies()", e)
+            } catch (e: Exception) {
+                Log.e("getUpcomingMovies()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         upcomingMovies = listOf()
@@ -129,15 +108,8 @@ class HomeViewModel @Inject constructor(
                         popularSeries = apiData
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getPopularSeries()", e)
-                _uiState.update {
-                    it.copy(
-                        popularSeries = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getPopularSeries()", e)
+            } catch (e: Exception) {
+                Log.e("getPopularSeries()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         popularSeries = listOf()
@@ -156,15 +128,8 @@ class HomeViewModel @Inject constructor(
                         topRatedSeries = apiData
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getTopRatedMovies()", e)
-                _uiState.update {
-                    it.copy(
-                        topRatedSeries = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getTopRatedMovies()", e)
+            } catch (e: Exception) {
+                Log.e("getTopRatedSeries()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         topRatedSeries = listOf()

@@ -10,12 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
 data class FavoritesUiState (
-    val favoriteMediasList: List<Media> = listOf(),
+    val favoriteMediasList: List<Media> = listOf()
 )
 
 @HiltViewModel
@@ -25,6 +24,10 @@ class FavoritesViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(FavoritesUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        getFavoriteMedias()
+    }
 
     fun getFavoriteMedias() {
         val mediaList = mutableListOf<Media>()
@@ -36,15 +39,8 @@ class FavoritesViewModel @Inject constructor(
                         favoriteMediasList = mediaList
                     )
                 }
-            } catch (e: IOException) {
-                Log.e("IO EXCEPTION", "getCategoryList()", e)
-                _uiState.update {
-                    it.copy(
-                        favoriteMediasList = listOf()
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("HTTP EXCEPTION", "getCategoryList()", e)
+            } catch (e: Exception) {
+                Log.e("getCategoryList()", e.stackTraceToString())
                 _uiState.update {
                     it.copy(
                         favoriteMediasList = listOf()

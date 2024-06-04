@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.myportfolio.mymovieapp.MainActivity
 import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.databinding.FragmentHomeBinding
 import com.myportfolio.mymovieapp.model.Media
@@ -32,13 +33,6 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var favoritesButton: ImageButton
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        homeViewModel.loadMedia()
-
-        //actionBar = (activity as AppCompatActivity).supportActionBar!!
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,11 +41,9 @@ class HomeFragment : Fragment() {
         val fragmentBinding = FragmentHomeBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
 
-        favoritesButton = (activity as AppCompatActivity).findViewById(R.id.toolbar_favorites_button)
-        favoritesButton.visibility = View.VISIBLE
-        favoritesButton.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
-        }
+        (activity as MainActivity).showFavoritesButton()
+
+        context?.deleteDatabase("movie_database") // remove later
 
         return fragmentBinding.root
     }
@@ -62,8 +54,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        favoritesButton.visibility = View.INVISIBLE
-        favoritesButton.setOnClickListener(null)
+        (activity as MainActivity).hideFavoritesButton()
         super.onDestroyView()
         _binding = null
     }
