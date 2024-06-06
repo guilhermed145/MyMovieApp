@@ -31,7 +31,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
-    private lateinit var favoritesButton: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +63,7 @@ class HomeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
-                        view = binding.movieList1.root,
+                        view = binding.movieList1,
                         category = Constants.popularCategoryId,
                         mediaType = Constants.movieTypeId,
                         list = it.popularMovies,
@@ -76,7 +75,7 @@ class HomeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
-                        view = binding.movieList2.root,
+                        view = binding.movieList2,
                         category = Constants.topRatedCategoryId,
                         mediaType = Constants.movieTypeId,
                         list = it.topRatedMovies,
@@ -88,7 +87,7 @@ class HomeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
-                        view = binding.movieList3.root,
+                        view = binding.movieList3,
                         category = Constants.upcomingCategoryId,
                         mediaType = Constants.movieTypeId,
                         list = it.upcomingMovies,
@@ -100,7 +99,7 @@ class HomeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
-                        view = binding.seriesList1.root,
+                        view = binding.seriesList1,
                         category = Constants.popularCategoryId,
                         mediaType = Constants.seriesTypeId,
                         list = it.popularSeries,
@@ -112,7 +111,7 @@ class HomeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
                     bindMovieListView(
-                        view = binding.seriesList2.root,
+                        view = binding.seriesList2,
                         category = Constants.topRatedCategoryId,
                         mediaType = Constants.seriesTypeId,
                         list = it.topRatedSeries,
@@ -142,6 +141,11 @@ class HomeFragment : Fragment() {
             categoryFragmentBundle.putString("currentMediaType", mediaType)
             view.findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, categoryFragmentBundle)
         }
-        view.bindList(title = categoryTitle, mediaList = list, onTitleClicked = onCategoryTitleClicked, onMediaClicked = onMediaClicked)
+        view.bindList(
+            title = categoryTitle,
+            mediaList = list,
+            onTitleClicked = onCategoryTitleClicked,
+            onMediaClicked = onMediaClicked
+        )
     }
 }
