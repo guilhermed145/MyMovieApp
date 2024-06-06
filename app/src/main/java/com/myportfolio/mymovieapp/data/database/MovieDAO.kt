@@ -32,6 +32,15 @@ interface MovieDAO {
     @Delete
     suspend fun removeMedia(media: Media)
 
+    @Delete
+    suspend fun removeCastMember(castMember: CastMember)
+
+    @Delete
+    suspend fun removeMediaGenre(mediaGenre: MediaGenre)
+
+    @Delete
+    suspend fun removeMediaMediaGenreCrossRef(crossRef: MediaMediaGenreCrossRef)
+
     @Query("SELECT EXISTS(SELECT 1 FROM medias WHERE media_id = :mediaId)")
     suspend fun isMediaInFavorites(mediaId: Int): Int
 
@@ -44,10 +53,6 @@ interface MovieDAO {
     @Transaction
     @Query("SELECT * FROM medias WHERE media_id = :mediaId")
     suspend fun getMediaWithCastMembers(mediaId: Int): List<MediaWithCastMembers>
-
-    @Transaction
-    @Query("SELECT * FROM media_genres WHERE genre_name = :genreName")
-    suspend fun getMediasOfMediaGenre(genreName: String): List<MediaGenreWithMedias>
 
     @Transaction
     @Query("SELECT * FROM medias WHERE media_id = :mediaId")

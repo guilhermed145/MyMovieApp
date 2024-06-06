@@ -1,6 +1,6 @@
 package com.myportfolio.mymovieapp.data.dto
 
-data class SerieResultDTO(
+data class SeriesResultDTO(
     val adult: Boolean,
     val backdrop_path: String,
     val first_air_date: String,

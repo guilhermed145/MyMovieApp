@@ -42,8 +42,6 @@ class HomeFragment : Fragment() {
 
         (activity as MainActivity).showFavoritesButton()
 
-        context?.deleteDatabase("movie_database") // remove later
-
         return fragmentBinding.root
     }
 

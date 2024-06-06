@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 data class HomeUiState (
@@ -42,7 +40,7 @@ class HomeViewModel @Inject constructor(
     private fun getPopularMovies() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getMovies(Constants.popularCategoryId, 1)
+                val apiData = repository.getMoviesInCategory(Constants.popularCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         popularMovies = apiData
@@ -62,7 +60,7 @@ class HomeViewModel @Inject constructor(
     private fun getTopRatedMovies() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getMovies(Constants.topRatedCategoryId, 1)
+                val apiData = repository.getMoviesInCategory(Constants.topRatedCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         topRatedMovies = apiData
@@ -82,7 +80,7 @@ class HomeViewModel @Inject constructor(
     private fun getUpcomingMovies() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getMovies(Constants.upcomingCategoryId, 1)
+                val apiData = repository.getMoviesInCategory(Constants.upcomingCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         upcomingMovies = apiData
@@ -102,7 +100,7 @@ class HomeViewModel @Inject constructor(
     private fun getPopularSeries() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getSeries(Constants.popularCategoryId, 1)
+                val apiData = repository.getSeriesInCategory(Constants.popularCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         popularSeries = apiData
@@ -122,7 +120,7 @@ class HomeViewModel @Inject constructor(
     private fun getTopRatedSeries() {
         viewModelScope.launch {
             try {
-                val apiData = repository.getSeries(Constants.topRatedCategoryId, 1)
+                val apiData = repository.getSeriesInCategory(Constants.topRatedCategoryId, 1)
                 _uiState.update {
                     it.copy(
                         topRatedSeries = apiData

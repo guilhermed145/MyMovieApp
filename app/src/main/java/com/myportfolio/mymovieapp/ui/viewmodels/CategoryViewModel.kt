@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 data class CategoryUiState (
@@ -33,11 +31,11 @@ class CategoryViewModel @Inject constructor(
             try {
                 if (type == Constants.movieTypeId) {
                     for (i in 1..5) {
-                        mediaList.addAll(repository.getMovies(category, i))
+                        mediaList.addAll(repository.getMoviesInCategory(category, i))
                     }
                 } else {
                     for (i in 1..5) {
-                        mediaList.addAll(repository.getSeries(category, i))
+                        mediaList.addAll(repository.getSeriesInCategory(category, i))
                     }
                 }
                 _uiState.update {

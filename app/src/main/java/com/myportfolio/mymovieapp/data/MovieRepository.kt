@@ -7,8 +7,10 @@ import com.myportfolio.mymovieapp.data.database.relations.MediaWithCastMembers
 import com.myportfolio.mymovieapp.data.database.relations.MediaWithMediaGenres
 import com.myportfolio.mymovieapp.data.dto.CastDTO
 import com.myportfolio.mymovieapp.data.dto.GenreDTO
+import com.myportfolio.mymovieapp.data.dto.MovieDetailResultDTO
 import com.myportfolio.mymovieapp.data.dto.MovieResultDTO
-import com.myportfolio.mymovieapp.data.dto.SerieResultDTO
+import com.myportfolio.mymovieapp.data.dto.SeriesDetailResultDTO
+import com.myportfolio.mymovieapp.data.dto.SeriesResultDTO
 import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.model.MediaGenre
@@ -19,8 +21,10 @@ import java.lang.Exception
  * The Repository object for the movies data.
  */
 interface MovieRepository {
-    suspend fun getMovies(categoryId: String, page: Int): List<Media>
-    suspend fun getSeries(categoryId: String, page: Int): List<Media>
+    suspend fun getMoviesInCategory(categoryId: String, page: Int): List<Media>
+    suspend fun getSeriesInCategory(categoryId: String, page: Int): List<Media>
+    suspend fun getMovie(mediaId: String): Media
+    suspend fun getSeries(mediaId: String): Media
     suspend fun getCastList(media: Media): List<CastMember>
     suspend fun getMediaGenreList(media: Media): List<MediaGenre>
     suspend fun getMediaTypeGenreList(mediaType: String): List<MediaGenre>
@@ -44,21 +48,28 @@ class MovieRepositoryImpl(
     private val mediaSmallPosterBaseUrl = "https://image.tmdb.org/t/p/w92/"
     private val apiKey = BuildConfig.API_KEY
 
-    override suspend fun getMovies(categoryId: String, page: Int): List<Media> {
-        return moviesApiService.getMovies(categoryId, apiKey, page).results.map {
+    override suspend fun getMoviesInCategory(categoryId: String, page: Int): List<Media> {
+        return moviesApiService.getMoviesInCategory(categoryId, apiKey, page).results.map {
             it.toMedia()
         }
     }
 
-    override suspend fun getSeries(categoryId: String, page: Int): List<Media> {
-        return moviesApiService.getSeries(categoryId, apiKey, page).results.map {
+    override suspend fun getSeriesInCategory(categoryId: String, page: Int): List<Media> {
+        return moviesApiService.getSeriesInCategory(categoryId, apiKey, page).results.map {
             it.toMedia()
         }
+    }
+
+    override suspend fun getMovie(mediaId: String): Media {
+        return moviesApiService.getMovie(mediaId, apiKey).toMedia()
+    }
+
+    override suspend fun getSeries(mediaId: String): Media {
+        return moviesApiService.getSeries(mediaId, apiKey).toMedia()
     }
 
     override suspend fun getCastList(media: Media): List<CastMember> {
-        var castList: List<CastMember> = listOf()
-        castList = try {
+        val castList: List<CastMember> = try {
             val apiResult = moviesApiService.getCastList(
                 media.mediaType, media.id.toString(), apiKey
             ).cast.map {
@@ -68,7 +79,6 @@ class MovieRepositoryImpl(
         } catch (e: Exception) {
             movieDAO.getMediaWithCastMembers(media.id).toCastList()
         }
-
         return castList
     }
 
@@ -76,22 +86,23 @@ class MovieRepositoryImpl(
         var genreList: MutableList<MediaGenre> = mutableListOf()
         try {
             val apiResult = getMediaTypeGenreList(media.mediaType)
-            if (media.genreIdList.isEmpty()) {
-                media.genreIdList = movieDAO.getMediaGenresOfMedia(media.id).toGenreList().map {
-                    it.id
-                }
+            val updatedMedia: Media = if (media.mediaType == Constants.movieTypeId) {
+                getMovie(media.id.toString())
+            } else {
+                getSeries(media.id.toString())
             }
-            for (genreId in media.genreIdList) {
+            for (genreId in updatedMedia.genreIdList) {
                 for (genre in apiResult) {
                     if (genreId == genre.id) {
                         genreList.add(genre)
+                        movieDAO.insertMediaGenre(genre)
+                        movieDAO.insertMediaMediaGenreCrossRef(MediaMediaGenreCrossRef(mediaId = media.id, genre.name))
                     }
                 }
             }
         } catch (e: Exception) {
             genreList = movieDAO.getMediaGenresOfMedia(media.id).toGenreList().toMutableList()
         }
-
         return genreList
     }
 
@@ -127,6 +138,13 @@ class MovieRepositoryImpl(
 
     override suspend fun removeFromFavorites(media: Media) {
         movieDAO.removeMedia(media)
+        media.genreList.forEach {
+            movieDAO.removeMediaGenre(it)
+            movieDAO.removeMediaMediaGenreCrossRef(MediaMediaGenreCrossRef(mediaId = media.id, it.name))
+        }
+        media.castList.forEach {
+            movieDAO.removeCastMember(it)
+        }
     }
 
     private fun MovieResultDTO.toMedia(): Media =
@@ -140,10 +158,9 @@ class MovieRepositoryImpl(
             synopsis = overview,
             genreIdList = genre_ids,
             mediaType = Constants.movieTypeId
-
         )
 
-    private fun SerieResultDTO.toMedia(): Media =
+    private fun SeriesResultDTO.toMedia(): Media =
         Media(
             id = id,
             mediaName = name,
@@ -153,6 +170,36 @@ class MovieRepositoryImpl(
             releaseYear = toReleaseYear(first_air_date),
             synopsis = overview,
             genreIdList = genre_ids,
+            mediaType = Constants.seriesTypeId
+        )
+
+    private fun MovieDetailResultDTO.toMedia(): Media =
+        Media(
+            id = id,
+            mediaName = original_title,
+            bigPoster = mediaBigPosterBaseUrl + poster_path,
+            mediumPoster = mediaMediumPosterBaseUrl + poster_path,
+            smallPoster = mediaSmallPosterBaseUrl + poster_path,
+            releaseYear = toReleaseYear(release_date),
+            synopsis = overview,
+            genreIdList = genres.map {
+                it.id
+            },
+            mediaType = Constants.seriesTypeId
+        )
+
+    private fun SeriesDetailResultDTO.toMedia(): Media =
+        Media(
+            id = id,
+            mediaName = name,
+            bigPoster = mediaBigPosterBaseUrl + poster_path,
+            mediumPoster = mediaMediumPosterBaseUrl + poster_path,
+            smallPoster = mediaSmallPosterBaseUrl + poster_path,
+            releaseYear = toReleaseYear(first_air_date),
+            synopsis = overview,
+            genreIdList = genres.map {
+                it.id
+            },
             mediaType = Constants.seriesTypeId
         )
 

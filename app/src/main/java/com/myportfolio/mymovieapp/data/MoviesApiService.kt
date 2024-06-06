@@ -2,8 +2,10 @@ package com.myportfolio.mymovieapp.data
 
 import com.myportfolio.mymovieapp.data.dto.CastListDTO
 import com.myportfolio.mymovieapp.data.dto.GenreListDTO
+import com.myportfolio.mymovieapp.data.dto.MovieDetailResultDTO
 import com.myportfolio.mymovieapp.data.dto.MovieListDTO
-import com.myportfolio.mymovieapp.data.dto.SerieListDTO
+import com.myportfolio.mymovieapp.data.dto.SeriesDetailResultDTO
+import com.myportfolio.mymovieapp.data.dto.SeriesListDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -13,7 +15,7 @@ import retrofit2.http.Query
  */
 interface MoviesApiService {
     @GET("movie/{category}?")
-    suspend fun getMovies(
+    suspend fun getMoviesInCategory(
         @Path("category") category: String,
         @Query("api_key") apiKey: String,
         @Query("page") page: Int = 1,
@@ -21,12 +23,26 @@ interface MoviesApiService {
     ): MovieListDTO
 
     @GET("tv/{category}?")
-    suspend fun getSeries(
+    suspend fun getSeriesInCategory(
         @Path("category") category: String,
         @Query("api_key") apiKey: String,
         @Query("page") page: Int = 1,
         @Query("language") language: String = "en-US",
-    ): SerieListDTO
+    ): SeriesListDTO
+
+    @GET("movie/{mediaId}?")
+    suspend fun getMovie(
+        @Path("mediaId") mediaId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US",
+    ): MovieDetailResultDTO
+
+    @GET("tv/{mediaId}?")
+    suspend fun getSeries(
+        @Path("mediaId") mediaId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US",
+    ): SeriesDetailResultDTO
 
     @GET("{category_id}/{media_id}/credits?")
     suspend fun getCastList(
