@@ -1,17 +1,28 @@
 package com.myportfolio.mymovieapp.data.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class LastEpisodeToAirDTO(
-    val air_date: String,
-    val episode_number: Int,
-    val episode_type: String,
+    @SerializedName("air_date")
+    val airDate: String,
+    @SerializedName("episode_number")
+    val episodeNumber: Int,
+    @SerializedName("episode_type")
+    val episodeType: String,
     val id: Int,
     val name: String,
     val overview: String,
-    val production_code: String,
+    @SerializedName("production_code")
+    val productionCode: String,
     val runtime: Int,
-    val season_number: Int,
-    val show_id: Int,
-    val still_path: Any,
-    val vote_average: Int,
-    val vote_count: Int
+    @SerializedName("season_number")
+    val seasonNumber: Int,
+    @SerializedName("show_id")
+    val showId: Int,
+    @SerializedName("still_path")
+    val stillPath: Any,
+    @SerializedName("vote_average")
+    val voteAverage: Int,
+    @SerializedName("vote_count")
+    val voteCount: Int
 )

@@ -1,15 +1,21 @@
 package com.myportfolio.mymovieapp.data.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class CrewDTO(
     val adult: Boolean,
-    val credit_id: String,
+    @SerializedName("credit_id")
+    val creditId: String,
     val department: String,
     val gender: Int,
     val id: Int,
     val job: String,
-    val known_for_department: String,
+    @SerializedName("known_for_department")
+    val knownForDepartment: String,
     val name: String,
-    val original_name: String,
+    @SerializedName("original_name")
+    val originalName: String,
     val popularity: Double,
-    val profile_path: String
+    @SerializedName("profile_path")
+    val profileOath: String
 )

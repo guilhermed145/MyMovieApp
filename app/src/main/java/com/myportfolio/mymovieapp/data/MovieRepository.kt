@@ -151,12 +151,12 @@ class MovieRepositoryImpl(
         Media(
             id = id,
             mediaName = title,
-            bigPoster = mediaBigPosterBaseUrl + poster_path,
-            mediumPoster = mediaMediumPosterBaseUrl + poster_path,
-            smallPoster = mediaSmallPosterBaseUrl + poster_path,
-            releaseYear = toReleaseYear(release_date),
+            bigPoster = mediaBigPosterBaseUrl + posterPath,
+            mediumPoster = mediaMediumPosterBaseUrl + posterPath,
+            smallPoster = mediaSmallPosterBaseUrl + posterPath,
+            releaseYear = toReleaseYear(releaseDate),
             synopsis = overview,
-            genreIdList = genre_ids,
+            genreIdList = genreIds,
             mediaType = Constants.movieTypeId
         )
 
@@ -164,23 +164,23 @@ class MovieRepositoryImpl(
         Media(
             id = id,
             mediaName = name,
-            bigPoster = mediaBigPosterBaseUrl + poster_path,
-            mediumPoster = mediaMediumPosterBaseUrl + poster_path,
-            smallPoster = mediaSmallPosterBaseUrl + poster_path,
-            releaseYear = toReleaseYear(first_air_date),
+            bigPoster = mediaBigPosterBaseUrl + posterPath,
+            mediumPoster = mediaMediumPosterBaseUrl + posterPath,
+            smallPoster = mediaSmallPosterBaseUrl + posterPath,
+            releaseYear = toReleaseYear(firstAirDate),
             synopsis = overview,
-            genreIdList = genre_ids,
+            genreIdList = genreIds,
             mediaType = Constants.seriesTypeId
         )
 
     private fun MovieDetailResultDTO.toMedia(): Media =
         Media(
             id = id,
-            mediaName = original_title,
-            bigPoster = mediaBigPosterBaseUrl + poster_path,
-            mediumPoster = mediaMediumPosterBaseUrl + poster_path,
-            smallPoster = mediaSmallPosterBaseUrl + poster_path,
-            releaseYear = toReleaseYear(release_date),
+            mediaName = originalTitle,
+            bigPoster = mediaBigPosterBaseUrl + posterPath,
+            mediumPoster = mediaMediumPosterBaseUrl + posterPath,
+            smallPoster = mediaSmallPosterBaseUrl + posterPath,
+            releaseYear = toReleaseYear(releaseDate),
             synopsis = overview,
             genreIdList = genres.map {
                 it.id
@@ -192,10 +192,10 @@ class MovieRepositoryImpl(
         Media(
             id = id,
             mediaName = name,
-            bigPoster = mediaBigPosterBaseUrl + poster_path,
-            mediumPoster = mediaMediumPosterBaseUrl + poster_path,
-            smallPoster = mediaSmallPosterBaseUrl + poster_path,
-            releaseYear = toReleaseYear(first_air_date),
+            bigPoster = mediaBigPosterBaseUrl + posterPath,
+            mediumPoster = mediaMediumPosterBaseUrl + posterPath,
+            smallPoster = mediaSmallPosterBaseUrl + posterPath,
+            releaseYear = toReleaseYear(firstAirDate),
             synopsis = overview,
             genreIdList = genres.map {
                 it.id
@@ -215,7 +215,7 @@ class MovieRepositoryImpl(
 
     private fun CastDTO.toCastMember(mediaId: Int): CastMember =
         CastMember(
-            actorImage = mediaSmallPosterBaseUrl + profile_path,
+            actorImage = mediaSmallPosterBaseUrl + profilePath,
             actorName = name,
             characterName = character,
             mediaId = mediaId

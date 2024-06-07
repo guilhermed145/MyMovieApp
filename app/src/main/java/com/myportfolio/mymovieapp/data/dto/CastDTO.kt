@@ -1,16 +1,23 @@
 package com.myportfolio.mymovieapp.data.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class CastDTO(
     val adult: Boolean,
-    val cast_id: Int,
+    @SerializedName("cast_id")
+    val castId: Int,
     val character: String,
-    val credit_id: String,
+    @SerializedName("credit_id")
+    val creditId: String,
     val gender: Int,
     val id: Int,
-    val known_for_department: String,
+    @SerializedName("known_for_department")
+    val knownForDepartment: String,
     val name: String,
     val order: Int,
-    val original_name: String,
+    @SerializedName("original_name")
+    val originalName: String,
     val popularity: Double,
-    val profile_path: String
+    @SerializedName("profile_path")
+    val profilePath: String
 )
