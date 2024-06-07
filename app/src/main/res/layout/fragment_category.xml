@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="8dp"
         android:paddingVertical="20dp"
-        android:text="Category Title"
+        android:text="@string/category_title"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="@color/dark_grey"

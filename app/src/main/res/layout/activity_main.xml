@@ -15,6 +15,7 @@
 
         <ImageButton
             android:id="@+id/toolbar_favorites_button"
+            android:contentDescription="@string/add_to_favorites"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="end"

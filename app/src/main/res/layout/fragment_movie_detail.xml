@@ -64,7 +64,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="24dp"
-                        android:text="Movie Title"
+                        android:text="@string/movie_title"
                         android:textSize="28sp"
                         android:textStyle="bold" />
 
@@ -72,7 +72,7 @@
                         android:id="@+id/fragment_movie_detail_subtitle"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="1996 | 1h 56m | User Rating: 7.6"
+                        android:text="@string/subtitle"
                         app:layout_constraintTop_toBottomOf="@id/fragment_movie_detail_title"
 
                         />
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="Synopsis"
+                        android:text="@string/synopsis"
                         android:textSize="20sp"
                         app:layout_constraintTop_toBottomOf="@id/fragment_movie_detail_subtitle" />
 
@@ -92,7 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vulputate fermentum neque eu fringilla. Quisque lacinia lectus felis, et ullamcorper mauris commodo eget. Cras aliquam sem ac diam blandit, sed pulvinar lacus convallis."
+                        android:text="@string/lorem_ipsum"
                         app:layout_constraintTop_toBottomOf="@id/fragment_movie_detail_synopsis_title" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -111,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="28dp"
-                        android:text="Cast"
+                        android:text="@string/cast"
                         android:textSize="20sp"
                         app:layout_constraintTop_toBottomOf="@id/fragment_movie_detail_genre_list" />
 

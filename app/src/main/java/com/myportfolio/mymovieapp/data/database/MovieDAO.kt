@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.myportfolio.mymovieapp.data.database.entities.MediaMediaGenreCrossRef
-import com.myportfolio.mymovieapp.data.database.relations.MediaGenreWithMedias
 import com.myportfolio.mymovieapp.data.database.relations.MediaWithCastMembers
 import com.myportfolio.mymovieapp.data.database.relations.MediaWithMediaGenres
 import com.myportfolio.mymovieapp.model.CastMember

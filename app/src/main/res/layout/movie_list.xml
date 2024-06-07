@@ -12,7 +12,7 @@
             android:id="@+id/category_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Category"
+            android:text="@string/category"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
             style="@style/Widget.MyMovieApp.CategoryTitleTextView"

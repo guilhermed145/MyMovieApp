@@ -30,7 +30,7 @@
         android:id="@+id/movie_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Titulo"
+        android:text="@string/title"
         android:textStyle="bold"
         android:textSize="16sp"
         android:textColor="@color/dark_grey"
@@ -42,7 +42,7 @@
         android:id="@+id/movie_release_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2000"
+        android:text="@string/year"
         />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
