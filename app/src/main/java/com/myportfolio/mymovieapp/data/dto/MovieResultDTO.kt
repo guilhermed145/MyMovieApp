@@ -2,6 +2,7 @@ package com.myportfolio.mymovieapp.data.dto
 
 import com.google.gson.annotations.SerializedName
 
+// Data Transfer Object responsible for retrieving the movie data.
 data class MovieResultDTO(
     val adult: Boolean,
     @SerializedName("backdrop_path")

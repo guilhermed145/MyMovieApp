@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// Data class containing all values the HomeFragment needs to display information to the user.
 data class HomeUiState (
     var popularMovies: List<Media> = listOf(),
     var topRatedMovies: List<Media> = listOf(),
@@ -21,6 +22,8 @@ data class HomeUiState (
     var topRatedSeries: List<Media> = listOf(),
 )
 
+// This ViewModel is responsible for returning a movie or tv series list for each of the categories
+// available in the app.
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: MovieRepository

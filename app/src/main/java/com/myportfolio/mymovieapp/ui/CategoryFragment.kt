@@ -19,9 +19,8 @@ import com.myportfolio.mymovieapp.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass.
- */
+// A Fragment class responsible of properly providing the UI that shows all movies and tv series
+// available in a specific category.
 @AndroidEntryPoint
 class CategoryFragment : Fragment() {
 
@@ -56,6 +55,9 @@ class CategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Sends the user to the MovieDetailFragment when selecting one of the medias.
+        // The selected media data will be send to the fragment as well, so it can display all
+        // information regarding the media that was chosen by the user.
         val onMediaClicked: (Media) -> Unit = {
             val movieDetailFragmentBundle = Bundle()
             movieDetailFragmentBundle.putSerializable("currentMedia", it)
@@ -68,14 +70,14 @@ class CategoryFragment : Fragment() {
         loadCategoryData()
     }
 
+    // Displays the title accordingly to the media type and the category specified.
+    // Adds the proper media list to the MovieListAdapter used in this fragment.
     private fun loadCategoryData() {
-
         binding.categoryFragmentTitle.text = if (currentMediaType == Constants.movieTypeId) {
             categoryTitle.plus(" " + getString(R.string.movies))
         } else {
             categoryTitle.plus(" " + getString(R.string.series))
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 categoryViewModel.uiState.collect {
@@ -83,7 +85,6 @@ class CategoryFragment : Fragment() {
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {

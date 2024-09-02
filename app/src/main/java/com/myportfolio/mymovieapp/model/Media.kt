@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import com.myportfolio.mymovieapp.util.Constants
 import java.io.Serializable
 
+// Model class for movies and tv series, containing it's most important information.
 @Entity(tableName = "medias")
 data class Media(
     @PrimaryKey

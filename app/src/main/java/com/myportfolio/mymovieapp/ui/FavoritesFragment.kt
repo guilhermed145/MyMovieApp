@@ -19,9 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
-/**
- * A simple [Fragment] subclass.
- */
+// This Fragment class is responsible for the UI that shows a list of all the user's favorite medias.
 @AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
@@ -56,6 +54,8 @@ class FavoritesFragment : Fragment() {
         loadFavoriteMedias()
     }
 
+    // Adds the fragment title text and the favorite medias list to the MovieListAdapter used by
+    // this fragment.
     private fun loadFavoriteMedias() {
         binding.categoryFragmentTitle.text = getString(R.string.favorites_fragment_title)
 

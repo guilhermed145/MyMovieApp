@@ -12,10 +12,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// Data class containing all values the FavoritesFragment needs to display information to the user.
 data class FavoritesUiState (
     val favoriteMediasList: List<Media> = listOf()
 )
 
+// This ViewModel is responsible for returning a list of all movies and tv series that has been
+// marked as favorite by the user.
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
     private val repository: MovieRepository

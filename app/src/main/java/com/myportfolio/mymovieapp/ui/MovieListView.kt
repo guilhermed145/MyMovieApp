@@ -18,6 +18,7 @@ class MovieListView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
         MovieListBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
+    // Binds all media data to this view.
     fun bindList(
         title: String,
         mediaList: List<Media>,

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+// Model class for movies and tv series genres.
 @Entity(tableName = "media_genres")
 data class MediaGenre (
     var id: Int = 0,

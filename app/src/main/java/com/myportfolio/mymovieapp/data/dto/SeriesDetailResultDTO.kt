@@ -2,6 +2,7 @@ package com.myportfolio.mymovieapp.data.dto
 
 import com.google.gson.annotations.SerializedName
 
+// Data Transfer Object responsible for retrieving a more detailed tv series data.
 data class SeriesDetailResultDTO(
     val adult: Boolean,
     @SerializedName("backdrop_path")

@@ -7,6 +7,7 @@ import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.model.MediaGenre
 
+// The database class provides the Data Access Object instance to the app.
 @Database(
     version = 1,
     entities = [Media::class, CastMember::class, MediaGenre::class, MediaMediaGenreCrossRef::class],
@@ -14,6 +15,7 @@ import com.myportfolio.mymovieapp.model.MediaGenre
 )
 abstract class MovieDatabase : RoomDatabase() {
 
+    // Function that Room will use to return the DAO instance.
     abstract fun getMovieDAO(): MovieDAO
 
 }

@@ -10,10 +10,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-/**
- * Main API Service for the app. Retrieves all the data necessary from the weather API.
- */
+// Main API Service for the app. Retrieves all the data necessary from the TMDB API.
 interface MoviesApiService {
+    // Retrieves a limited list of movies from a specific category (popular, top rated or upcoming).
     @GET("movie/{category}?")
     suspend fun getMoviesInCategory(
         @Path("category") category: String,
@@ -22,6 +21,7 @@ interface MoviesApiService {
         @Query("language") language: String = "en-US",
     ): MovieListDTO
 
+    // Retrieves a limited list of tv series from a specific category (popular or top rated).
     @GET("tv/{category}?")
     suspend fun getSeriesInCategory(
         @Path("category") category: String,
@@ -30,6 +30,7 @@ interface MoviesApiService {
         @Query("language") language: String = "en-US",
     ): SeriesListDTO
 
+    // Retrieves details about a specific movie given the id.
     @GET("movie/{mediaId}?")
     suspend fun getMovie(
         @Path("mediaId") mediaId: String,
@@ -37,6 +38,7 @@ interface MoviesApiService {
         @Query("language") language: String = "en-US",
     ): MovieDetailResultDTO
 
+    // Retrieves details about a specific tv series given the id.
     @GET("tv/{mediaId}?")
     suspend fun getSeries(
         @Path("mediaId") mediaId: String,
@@ -44,6 +46,7 @@ interface MoviesApiService {
         @Query("language") language: String = "en-US",
     ): SeriesDetailResultDTO
 
+    // Retrieves a list with all cast members from a movie or tv series.
     @GET("{category_id}/{media_id}/credits?")
     suspend fun getCastList(
         @Path("category_id") categoryId: String,
@@ -52,11 +55,11 @@ interface MoviesApiService {
         @Query("language") language: String = "en-US",
     ): CastListDTO
 
+    // Retrieves a list that contains all movie or tv series genres and their respective ids.
     @GET("genre/{media_type}/list?")
     suspend fun getGenreList(
         @Path("media_type") mediaType: String,
         @Query("api_key") apiKey: String,
         @Query("language") language: String = "en-US",
     ): GenreListDTO
-
 }

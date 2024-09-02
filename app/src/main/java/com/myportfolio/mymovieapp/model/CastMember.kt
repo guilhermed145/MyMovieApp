@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+// Model class for movies and tv series cast members.
 @Entity(tableName = "cast_members")
 data class CastMember (
     @PrimaryKey

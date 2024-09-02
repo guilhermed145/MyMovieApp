@@ -65,7 +65,9 @@ class MovieDetailFragment : Fragment() {
         movieDetailViewModel.setCurrentCastList(listOf())
     }
 
+    // Loads and binds all data related to current media.
     private fun loadMovieData() {
+        // Loads the poster picture.
         if (currentMedia.bigPoster != "") {
             Picasso.get()
                 .load(currentMedia.bigPoster)
@@ -89,8 +91,8 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    // Loads the Favorites button, so the user can save this media in the favorites list.
     private fun loadAddToFavoritesButton() {
-
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 movieDetailViewModel.uiState.collect {
@@ -102,7 +104,6 @@ class MovieDetailFragment : Fragment() {
                 }
             }
         }
-
         binding.fragmentMovieDetailFavoriteFab.setOnClickListener {
             if (movieDetailViewModel.uiState.value.isInFavorites) {
                 movieDetailViewModel.removeMediaFromFavorites(currentMedia)
@@ -112,7 +113,6 @@ class MovieDetailFragment : Fragment() {
                 Toast.makeText(context, "Added to favorites!", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
 }

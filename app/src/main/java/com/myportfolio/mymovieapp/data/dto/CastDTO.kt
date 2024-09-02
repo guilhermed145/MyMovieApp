@@ -2,6 +2,7 @@ package com.myportfolio.mymovieapp.data.dto
 
 import com.google.gson.annotations.SerializedName
 
+// Data Transfer Object responsible for retrieving the media cast data.
 data class CastDTO(
     val adult: Boolean,
     @SerializedName("cast_id")

@@ -7,6 +7,7 @@ import com.myportfolio.mymovieapp.data.database.entities.MediaMediaGenreCrossRef
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.model.MediaGenre
 
+// A data class that models the relationship between the medias and the media's genres for the Room database.
 data class MediaWithMediaGenres (
     @Embedded
     val media: Media,

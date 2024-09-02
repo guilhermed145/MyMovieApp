@@ -12,6 +12,9 @@ import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.model.CastMember
 import com.squareup.picasso.Picasso
 
+// This adapter uses the fragment_movie_detail_cast_list RecyclerView in the fragment_movie_detail
+// layout to show a list containing a movie or tv series cast.
+// Each item shows a cast member's picture, their name and their character's name.
 class MovieCastListAdapter:
     RecyclerView.Adapter<MovieCastListAdapter.MovieCastViewHolder>() {
 
@@ -57,6 +60,7 @@ class MovieCastListAdapter:
         return differ.currentList.size
     }
 
+    // Updates data being used by the adapter.
     fun addData(castList: List<CastMember>) {
         differ.submitList(castList)
     }

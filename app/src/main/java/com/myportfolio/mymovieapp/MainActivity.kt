@@ -11,10 +11,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 
+// Main Activity class. Contains all the fragments used in the app and deals with the toolbar.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
+    // Controls the navigation between fragments.
     private lateinit var navController: NavController
+    // Button inside the toolbar that sends the user to the Favorites Fragment, where it shows all the user's favorite media.
     private lateinit var favoritesButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +35,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
+    // Shows the Favorites button in the toolbar.
     fun showFavoritesButton() {
         favoritesButton.visibility = View.VISIBLE
         favoritesButton.setOnClickListener {
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
     }
 
+    // Hides the Favorites button in the toolbar.
     fun hideFavoritesButton() {
         favoritesButton.visibility = View.INVISIBLE
         favoritesButton.setOnClickListener(null)

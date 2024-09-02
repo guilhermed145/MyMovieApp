@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.myportfolio.mymovieapp.R
 
+// This adapter uses the fragment_movie_detail_genre_list RecyclerView in the fragment_movie_detail
+// layout to show a list containing a movie or tv series genres.
+// Each item shows one of the movie or tv series genres.
 class MovieGenreListAdapter:
     RecyclerView.Adapter<MovieGenreListAdapter.MovieGenreViewHolder>() {
 
@@ -43,6 +46,7 @@ class MovieGenreListAdapter:
         return differ.currentList.size
     }
 
+    // Updates data being used by the adapter.
     fun addData(genreList: List<String>) {
         differ.submitList(genreList)
     }

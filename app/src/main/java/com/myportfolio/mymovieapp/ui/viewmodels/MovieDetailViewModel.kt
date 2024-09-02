@@ -14,12 +14,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// Data class containing all values the MovieDetailFragment needs to display information to the user.
 data class MovieDetailUiState (
     var castList: List<CastMember> = listOf(),
     var genreList: List<MediaGenre> = listOf(),
     var isInFavorites: Boolean = false
 )
 
+// This ViewModel is responsible for returning data about a specific movie (cast members and genres).
+// It is also responsible for adding or removing the media from the favorites list.
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
     private val repository: MovieRepository

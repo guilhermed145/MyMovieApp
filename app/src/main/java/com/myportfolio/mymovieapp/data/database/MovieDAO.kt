@@ -13,9 +13,9 @@ import com.myportfolio.mymovieapp.model.CastMember
 import com.myportfolio.mymovieapp.model.Media
 import com.myportfolio.mymovieapp.model.MediaGenre
 
+// The Data Access Object provides methods for retrieving, inserting and deleting data in the database.
 @Dao
 interface MovieDAO {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedia(media: Media)
 
@@ -56,5 +56,4 @@ interface MovieDAO {
     @Transaction
     @Query("SELECT * FROM medias WHERE media_id = :mediaId")
     suspend fun getMediaGenresOfMedia(mediaId: Int): List<MediaWithMediaGenres>
-
 }

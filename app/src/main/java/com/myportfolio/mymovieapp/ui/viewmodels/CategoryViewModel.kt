@@ -13,10 +13,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// Data class containing all values the CategoryFragment needs to display information to the user.
 data class CategoryUiState (
     val currentMediaList: List<Media> = listOf(),
 )
 
+// This ViewModel is responsible for returning a movie or tv series list of a specific category.
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val repository: MovieRepository

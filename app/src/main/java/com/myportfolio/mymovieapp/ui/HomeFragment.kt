@@ -19,9 +19,8 @@ import com.myportfolio.mymovieapp.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass.
- */
+// The main Fragment of the app. Responsible for showing a list of movies and tv series of every
+// category available in the app.
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
@@ -53,7 +52,9 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    // Loads the data of all the movies and series lists in the Home Fragment.
     private fun loadCategories() {
+        // Popular movies.
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
@@ -66,6 +67,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        // Top Rated movies.
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
@@ -78,6 +80,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        // Upcoming movies.
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
@@ -90,6 +93,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        // Popular series.
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
@@ -102,6 +106,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        // Top rated series.
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect {
@@ -116,6 +121,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // Binds all data to the MovieListView defined in the parameters.
     private fun bindMovieListView(
         view: MovieListView, category: String, mediaType: String, list: List<Media>
     ) {

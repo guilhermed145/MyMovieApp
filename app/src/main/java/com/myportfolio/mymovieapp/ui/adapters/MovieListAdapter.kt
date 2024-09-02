@@ -13,7 +13,8 @@ import com.myportfolio.mymovieapp.R
 import com.myportfolio.mymovieapp.model.Media
 import com.squareup.picasso.Picasso
 
-
+// This adapter is responsible for showing any list of movies or tv series the app may need to display to the user.
+// Each item shows the media name, a poster picture and the release year.
 class MovieListAdapter: RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
 
     enum class MediaPosterSize {
@@ -80,6 +81,7 @@ class MovieListAdapter: RecyclerView.Adapter<MovieListAdapter.MovieListViewHolde
         return differ.currentList.size
     }
 
+    // Updates data being used by the adapter.
     fun addData(mediaList: List<Media>) {
         differ.submitList(mediaList)
     }
